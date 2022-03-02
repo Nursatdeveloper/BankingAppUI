@@ -1,0 +1,51 @@
+.header__container{
+    background-color: green;
+    height:70px;
+    display: flex;
+    position:relative
+}
+
+.logo__container{
+    font-size: 22px;
+    color:white;
+    text-decoration: none;
+    margin-left:40px;
+    margin-top:20px;
+}
+
+.header__left{
+    position:absolute;
+    top:15px;
+}
+
+.header__right{
+    position:absolute;
+    right:10px;
+    display: flex;
+    width: fit-content;
+    top:15px;
+}
+
+.login__container{
+    margin-right:20px;
+    border:1px solid white;
+    padding:5px;
+    border-radius: 5px;
+    cursor:pointer;
+}
+
+.login__container a{
+    text-decoration: none;
+    color:white;
+}
+
+.register__container{
+    padding:5px;
+    color: white;
+    cursor:pointer;
+}
+
+.register__container a{
+    text-decoration: none;
+    color:white;
+}
