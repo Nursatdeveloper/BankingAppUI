@@ -1,15 +1,15 @@
 import React, { useState } from 'react'
 import "./Login.css"
 import axios from 'axios'
-import { useNavigate } from "react-router-dom";
 import API_URL from '../api_url';
+import { useNavigate } from 'react-router-dom';
 
 
 const Login = () => {
     const [telephone, setTelephone] = useState('');
     const [password, setPassword]  = useState('');
+
     let navigate = useNavigate();
-    
     const redirect = (url:string) =>{
         navigate(url);
     }
