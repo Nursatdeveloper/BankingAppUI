@@ -1,11 +1,18 @@
-import React, { useState } from 'react'
+import React, { FC, useState } from 'react'
 import "./Login.css"
 import axios from 'axios'
 import API_URL from '../api_url';
 import { useNavigate } from 'react-router-dom';
+import User from '../models/User';
+import Account from '../models/Account';
 
+interface LoginProps{
+    setLoggedIn:(logged:boolean) => void,
+    setUser:(user:User) => void,
+    setAccount:(accounts:Account[]) => void
+}
 
-const Login = () => {
+const Login:FC<LoginProps> = ({setLoggedIn, setUser, setAccount}) => {
     const [telephone, setTelephone] = useState('');
     const [password, setPassword]  = useState('');
 
@@ -23,7 +30,10 @@ const Login = () => {
         .then(response => {
             console.log(response.data)
             if(response.data.isSuccess){
+                setAccount(response.data.accounts);
+                setUser(response.data);
                 sessionStorage.setItem("authToken", JSON.stringify(response.data.message));
+                setLoggedIn(true);
                 redirect("/profile");
             }
             else{

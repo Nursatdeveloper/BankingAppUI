@@ -49,14 +49,14 @@ const Register = () => {
     }
 
     const passwordsMatch = (password:string, confirmPassword:string) => {
-        if(password != confirmPassword){
+        if(password !== confirmPassword){
             setPassword('');
             setConfirmPassword('');
             return alert("Passwords do not match!")
         }
     }
     const validateIIN = (iin:string) => {
-        if(iin.length != 12){
+        if(iin.length !== 12){
             return alert("IIN must consist of 12 numbers!");
         }
     }
@@ -69,7 +69,7 @@ const Register = () => {
         validator += date[8];
         validator += date[9];
         for(let i = 0; i < 6; i++){
-            if(iin[i] != validator[i]){
+            if(iin[i] !== validator[i]){
                 return alert("IIN or date of birth is not valid");
             }
         }
