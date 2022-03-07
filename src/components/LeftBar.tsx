@@ -29,6 +29,11 @@ const LeftBar = () => {
                 Уведомления
             </div>
         </a>
+        <a href="/notifications">
+            <div className='leftbar__item'>
+                Выйти
+            </div>
+        </a>
     </div>
   )
 }

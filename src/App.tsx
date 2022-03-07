@@ -8,6 +8,7 @@ import Home from './pages/Home';
 import Register from './pages/Register';
 import User from './models/User';
 import Account from './models/Account';
+import Notification from './models/Notification';
 
 
 function App() {
@@ -21,18 +22,21 @@ function App() {
     phoneNumber:"",
     gender:"",
     cardNumber:"",
-    role:""
+    role:"",
   });
   const [account, setAccount] = useState<Account[]>([]);
+  const [notification, setNotification] = useState<Notification[]>([])
   return (
     <div className="App">
       <Router>
         <Header />
         <Routes>
-          <Route path="/" element={loggedIn ? <Home/> : <Login setLoggedIn={setLoggedIn} setUser={setUser} setAccount={setAccount}/>} />
-          <Route path="/login" element={<Login setLoggedIn={setLoggedIn} setUser={setUser} setAccount={setAccount}/>} />
+          <Route path="/" element={loggedIn ? <Home/> : <Login setLoggedIn={setLoggedIn} setUser={setUser} setAccount={setAccount} setNotification={setNotification}/>} />
+          <Route path="/login" element={<Login setLoggedIn={setLoggedIn} setUser={setUser} setAccount={setAccount} setNotification={setNotification}/>} />
           <Route path="/register" element={<Register />} />
-          <Route path="/profile" element={<Profile user={user} accounts={account}/>} />
+          <Route 
+            path="/profile" 
+            element={<Profile user={user} accounts={account} notifications={notification} />}  />
           
         </Routes>
       </Router>

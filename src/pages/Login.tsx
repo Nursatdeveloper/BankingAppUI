@@ -5,14 +5,16 @@ import API_URL from '../api_url';
 import { useNavigate } from 'react-router-dom';
 import User from '../models/User';
 import Account from '../models/Account';
+import Notification from '../models/Notification'
 
 interface LoginProps{
     setLoggedIn:(logged:boolean) => void,
     setUser:(user:User) => void,
-    setAccount:(accounts:Account[]) => void
+    setAccount:(accounts:Account[]) => void,
+    setNotification:(notifications:Notification[]) => void
 }
 
-const Login:FC<LoginProps> = ({setLoggedIn, setUser, setAccount}) => {
+const Login:FC<LoginProps> = ({setLoggedIn, setUser, setAccount, setNotification}) => {
     const [telephone, setTelephone] = useState('');
     const [password, setPassword]  = useState('');
 
@@ -32,6 +34,7 @@ const Login:FC<LoginProps> = ({setLoggedIn, setUser, setAccount}) => {
             if(response.data.isSuccess){
                 setAccount(response.data.accounts);
                 setUser(response.data);
+                setNotification(response.data.notifications)
                 sessionStorage.setItem("authToken", JSON.stringify(response.data.message));
                 setLoggedIn(true);
                 redirect("/profile");

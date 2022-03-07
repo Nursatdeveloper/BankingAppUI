@@ -1,6 +1,6 @@
 interface Account {
     accountId:number,
-    accountnumber:string,
+    accountNumber:string,
     accountType:string,
     balance:number,
     currencyType:string,
