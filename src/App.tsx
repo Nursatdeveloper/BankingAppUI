@@ -9,6 +9,7 @@ import Register from './pages/Register';
 import User from './models/User';
 import Account from './models/Account';
 import Notification from './models/Notification';
+import Transfer from './pages/Transfer';
 
 
 function App() {
@@ -37,7 +38,7 @@ function App() {
           <Route 
             path="/profile" 
             element={<Profile user={user} accounts={account} notifications={notification} />}  />
-          
+          <Route path="/transfer" element={<Transfer />} />
         </Routes>
       </Router>
     </div>

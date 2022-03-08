@@ -1,22 +1,41 @@
 import axios from 'axios'
-import React, { FC, useEffect } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import API_URL from '../api_url'
 import Account from '../models/Account'
 import './MainSection.css'
 
 interface MainSectionProps{
-  accounts:Account[]
+  userId:number
 }
 
-const MainSection:FC<MainSectionProps> = ({accounts}) => {
+const MainSection:FC<MainSectionProps> = ({userId}) => {
+  const [account, setAccount] = useState<Account[]>([])
 
   useEffect(()=> {
-    axios.post(API_URL+'')
+    apiRequest();
   },[])
+
+  async function apiRequest(){
+    const id = sessionStorage.getItem("id");
+    const response = await fetch(API_URL+'/account/get-accounts/'+id, {
+      method: "GET",
+      /*headers: {
+          "Accept": "application/json",
+          "Authorization": "Bearer " + token  
+      }*/
+    });
+    if (response.ok === true) {     
+        const data = await response.json();
+        setAccount(data);
+    }
+    else
+        apiRequest()
+  }
+
 
   return (
     <div className='mainsection__container'>
-      {accounts.map(account => 
+      {account.map(account => 
         <div key={account.accountId} className='mainsection__row'>
           <div className='accountType__container'>{account.accountType}</div>
           <div className='accountNumber__container'>{account.accountNumber}</div>

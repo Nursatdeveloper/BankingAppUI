@@ -17,8 +17,8 @@ const Profile:FC<ProfileProps> = ({user, accounts, notifications}) => {
   return (
     <div className='profile__container'>
       <LeftBar />
-      <MainSection accounts={accounts} />
-      <RightBar notifications={notifications} />
+      <MainSection userId={user.userId}/>
+      <RightBar userId={user.userId} />
     </div>
   )
 }

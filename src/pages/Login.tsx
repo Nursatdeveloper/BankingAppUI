@@ -36,6 +36,7 @@ const Login:FC<LoginProps> = ({setLoggedIn, setUser, setAccount, setNotification
                 setUser(response.data);
                 setNotification(response.data.notifications)
                 sessionStorage.setItem("authToken", JSON.stringify(response.data.message));
+                sessionStorage.setItem("id", JSON.stringify(response.data.userId));
                 setLoggedIn(true);
                 redirect("/profile");
             }
