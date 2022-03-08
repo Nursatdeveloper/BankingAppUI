@@ -24,6 +24,7 @@ function App() {
     gender:"",
     cardNumber:"",
     role:"",
+    accounts:[]
   });
   const [account, setAccount] = useState<Account[]>([]);
   const [notification, setNotification] = useState<Notification[]>([])

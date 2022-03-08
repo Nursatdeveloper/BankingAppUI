@@ -1,3 +1,4 @@
+import Account from './Account'
 interface User{
     userId:number,
     firstName:string,
@@ -8,6 +9,7 @@ interface User{
     cardNumber:string,
     phoneNumber:string,
     role:string,
+    accounts:Account[]
 }
 
 export default User
