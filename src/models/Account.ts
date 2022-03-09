@@ -5,7 +5,10 @@ interface Account {
     balance:number,
     currencyType:string,
     ownerIIN:string,
-    ownerName:string
+    ownerName:string,
+    isActive:boolean,
+    isBlocked:boolean,
+    activatedDate:string
 }
 
 export default Account

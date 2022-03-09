@@ -1,7 +1,22 @@
-import React from 'react'
+import React, { FC } from 'react'
+import { useNavigate } from 'react-router-dom';
 import './LeftBar.css'
 
-const LeftBar = () => {
+interface LeftBarProps{
+    setLogout:(logout:boolean) => void
+}
+
+const LeftBar:FC<LeftBarProps> = ({setLogout}) => {
+    let navigate = useNavigate();
+    const redirect = (url:string) =>{
+        navigate(url);
+    }
+    function logout(){
+        sessionStorage.removeItem("authToken");
+        sessionStorage.removeItem("id")
+        setLogout(false)
+        redirect('/login')
+    }
   return (
     <div className='leftbar__container'>
         <a href="/messages">
@@ -29,7 +44,7 @@ const LeftBar = () => {
                 Уведомления
             </div>
         </a>
-        <a href="/notifications">
+        <a onClick={logout}>
             <div className='leftbar__item'>
                 Выйти
             </div>

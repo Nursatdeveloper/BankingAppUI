@@ -11,6 +11,7 @@ import Account from './models/Account';
 import Notification from './models/Notification';
 import Transfer from './pages/Transfer';
 import Message from './pages/Message';
+import MyBank from './pages/MyBank';
 
 
 function App() {
@@ -39,9 +40,10 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route 
             path="/profile" 
-            element={<Profile user={user} accounts={account} notifications={notification} />}  />
-          <Route path="/transfer" element={<Transfer />} />
-          <Route path="/messages" element={<Message />} />
+            element={<Profile user={user} accounts={account} notifications={notification} setLogout={setLoggedIn} />}  />
+          <Route path="/transfer" element={<Transfer setLogout={setLoggedIn}/>} />
+          <Route path="/messages" element={<Message setLogout={setLoggedIn} />} />
+          <Route path="/my-bank" element={<MyBank setLogout={setLoggedIn} />} />
         </Routes>
       </Router>
     </div>

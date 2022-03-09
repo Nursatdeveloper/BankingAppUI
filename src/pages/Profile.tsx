@@ -10,13 +10,14 @@ import Notification from '../models/Notification'
 interface ProfileProps{
   user:User,
   accounts:Account[],
-  notifications:Notification[]
+  notifications:Notification[],
+  setLogout:(logout:boolean) => void
 }
 
-const Profile:FC<ProfileProps> = ({user, accounts, notifications}) => {
+const Profile:FC<ProfileProps> = ({user, accounts, notifications, setLogout}) => {
   return (
     <div className='profile__container'>
-      <LeftBar />
+      <LeftBar setLogout={setLogout}/>
       <MainSection userId={user.userId}/>
       <RightBar userId={user.userId} />
     </div>

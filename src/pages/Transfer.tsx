@@ -1,9 +1,13 @@
-import React, { useState } from 'react'
+import React, { FC, useState } from 'react'
 import LeftBar from '../components/LeftBar'
 import TransferForm from '../components/TransferForm'
 import './Transfer.css'
 
-const Transfer = () => {
+interface TransferProps{
+    setLogout:(logout:boolean) => void
+}
+
+const Transfer:FC<TransferProps> = ({setLogout}) => {
     const [showForm, setShowForm] = useState<boolean>(false);
     const [transferType, setTransferType] = useState<string>('');
 
@@ -18,7 +22,7 @@ const Transfer = () => {
     }
   return (
     <div className='transfer__container'>
-        <LeftBar />
+        <LeftBar setLogout={setLogout} />
         <div className='transfer__type'>
             <div className='transfer__type_row' onClick={betweenMyAccountsClick}>
                 Между своими счетами

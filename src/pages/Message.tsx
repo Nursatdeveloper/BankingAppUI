@@ -1,12 +1,15 @@
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import API_URL from '../api_url'
 import LeftBar from '../components/LeftBar'
 import Account from '../models/Account'
 import BankOperation from '../models/BankOperation'
 import './Message.css'
 
-const Message = () => {
+interface MessageProps{
+    setLogout:(logout:boolean) => void
+}
+const Message:FC<MessageProps> = ({setLogout}) => {
     const [accounts, setAccounts] = useState<Account[]>([])
     const [messages, setMessages] = useState<BankOperation[]>([])
     const [show, setShow] = useState<boolean>(false);
@@ -30,7 +33,7 @@ const Message = () => {
 
   return (
     <div className='message__container'>
-        <LeftBar />
+        <LeftBar setLogout={setLogout}/>
         <div className='message__accounts'>
             {accounts.map((account, i) =>
             <div key={i++} className='message__account_wrapper' onClick={()=>handleShowMessage(account.accountType)}>
