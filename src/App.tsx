@@ -10,6 +10,7 @@ import User from './models/User';
 import Account from './models/Account';
 import Notification from './models/Notification';
 import Transfer from './pages/Transfer';
+import Message from './pages/Message';
 
 
 function App() {
@@ -40,6 +41,7 @@ function App() {
             path="/profile" 
             element={<Profile user={user} accounts={account} notifications={notification} />}  />
           <Route path="/transfer" element={<Transfer />} />
+          <Route path="/messages" element={<Message />} />
         </Routes>
       </Router>
     </div>
