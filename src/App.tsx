@@ -21,7 +21,7 @@ function App() {
           <Route path="/login" element={<Login setLoggedIn={setLoggedIn} />} />
           <Route path="/register" element={<Register />} />
           {/*Production: <Route path="/dashboard" element={loggedIn ? <Dashboard /> : <Login setLoggedIn={setLoggedIn}/>}/>*/}
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard setLogout={setLoggedIn}/>} />
         </Routes>
       </Router>
     </div>

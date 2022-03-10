@@ -1,17 +1,35 @@
-import React, { useState } from 'react'
+import React, { FC, useState } from 'react'
 import styled from 'styled-components'
 import '../App.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { useNavigate } from 'react-router-dom'
 
-const Menu = () => {
+interface MenuProps{
+    setLogout:(logout:boolean) => void
+}
+
+const Menu:FC<MenuProps> = ({setLogout}) => {
+    let navigate = useNavigate();
+    const redirect = (url:string) =>{
+        navigate(url);
+    }
+
     const [icon, setIcon] = useState<string>('card');
 
     const selectedIcon = {
         color: '#000058',
-        'border-left': '4px solid #000058'
+        'border-left': '4px solid #000058',
+        'border-radius': '3px'
     }
     const defaultIcon = {
         color: '#a6a6a6'
+    }
+
+    function logout(){
+        setLogout(false);
+        sessionStorage.removeItem('id');
+        sessionStorage.removeItem('authToken');
+        redirect('/login')
     }
   return (
     <MenuWrapper>
@@ -39,7 +57,16 @@ const Menu = () => {
                 </svg>         
             </MenuItem>
 
-        </ButtonWrapper>   
+        </ButtonWrapper>  
+        <Logout onClick={logout}>
+            <LogoutIcon>
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" className="bi bi-box-arrow-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0v2z"/>
+                <path fill-rule="evenodd" d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708l-3-3z"/>
+                </svg>
+                <div>Выйти</div>
+            </LogoutIcon>
+        </Logout> 
     
     
     </MenuWrapper>
@@ -87,4 +114,36 @@ const MenuItem = styled.div`
         cursor:pointer;
     }
     
+`
+
+const Logout = styled.button`
+    color:#000058;
+    margin-top:150px;
+    width:fit-content;
+    display:block;
+    margin-left:auto;
+    margin-right:auto;
+    background-color:white;
+    border:0;
+`
+
+const LogoutIcon = styled.div`
+    width:50px;
+    height:50px;
+    svg{ 
+        color:#a6a6a6;
+        transition:color, 0.5s ease-in-out;
+    }
+    div{
+        font-size:12px;
+        color:#a6a6a6;
+        transition:color, 0.5s ease-in-out;
+    }
+
+
+    :hover{
+        div{ color:#000058; }
+        svg{ color:#000058; }
+        cursor:pointer;
+    }
 `
