@@ -18,8 +18,8 @@ const Menu:FC<MenuProps> = ({setLogout}) => {
 
     const selectedIcon = {
         color: '#000058',
-        'border-left': '4px solid #000058',
-        'border-radius': '3px'
+        borderLeft: '4px solid #000058',
+        borderRadius: '2px'
     }
     const defaultIcon = {
         color: '#a6a6a6'
@@ -86,8 +86,8 @@ const MenuWrapper = styled.div`
 
 const AppLogo = styled.div`
     background-size: cover;
-    width:70px;
-    height:60px;
+    width:60px;
+    height:50px;
     margin-right:auto;
     margin-left:auto;
     margin-top:10px;

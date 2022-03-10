@@ -2,5 +2,14 @@
     background-image: url("./images/logo.png");
 }
 
+.golden__thing{
+    background-image:url('./images/card_golden_thing.png');
+    width:50px;
+    height:30px;
+    background-size:cover;
+    border-radius:5px;
+    margin-top:70px;
+    margin-left:30px;
+  }
 
 

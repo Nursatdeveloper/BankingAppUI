@@ -7,17 +7,21 @@ import Transactions from '../components/Transactions'
 
 interface DashboardProps{
     setLogout:(logout:boolean) => void
+    id:string,
+    token:string
 }
 
-const Dashboard:FC<DashboardProps> = ({setLogout}) => {
+const Dashboard:FC<DashboardProps> = ({setLogout, id, token}) => {
   return (
     <Container>
         <Menu setLogout={setLogout}/>
-        <MyCards />
-        <Wrapper>
-            <Overview />
-            <Transactions />
-        </Wrapper>
+        <Body>
+            <MyCards id={id} token={token}/>
+            <Wrapper>
+                <Overview />
+                <Transactions />
+            </Wrapper>
+        </Body>
     </Container>
   )
 }
@@ -25,6 +29,10 @@ const Dashboard:FC<DashboardProps> = ({setLogout}) => {
 export default Dashboard
 
 const Container = styled.div`
+    display:flex;
+`
+
+const Body = styled.div`
     display:flex;
 `
 
