@@ -1,49 +1,26 @@
 import React, { useState } from 'react';
 import './App.css';
 import {BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import Header from './components/Header';
 import Login from './pages/Login';
-import Profile from './pages/Profile';
-import Home from './pages/Home';
 import Register from './pages/Register';
 import User from './models/User';
 import Account from './models/Account';
 import Notification from './models/Notification';
-import Transfer from './pages/Transfer';
-import Message from './pages/Message';
-import MyBank from './pages/MyBank';
+import Dashboard from './pages/Dashboard';
+
 
 
 function App() {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
-  const [user, setUser] = useState<User>({
-    userId:0,
-    firstName:"",
-    lastName:"",
-    iin:"",
-    birthdate:"",
-    phoneNumber:"",
-    gender:"",
-    cardNumber:"",
-    role:"",
-    accounts:[]
-  });
-  const [account, setAccount] = useState<Account[]>([]);
-  const [notification, setNotification] = useState<Notification[]>([])
+
   return (
     <div className="App">
       <Router>
-        <Header />
         <Routes>
-          <Route path="/" element={loggedIn ? <Home/> : <Login setLoggedIn={setLoggedIn} setUser={setUser} setAccount={setAccount} setNotification={setNotification}/>} />
-          <Route path="/login" element={<Login setLoggedIn={setLoggedIn} setUser={setUser} setAccount={setAccount} setNotification={setNotification}/>} />
+          <Route path="/" element={<Login setLoggedIn={setLoggedIn} />} />
+          <Route path="/login" element={<Login setLoggedIn={setLoggedIn} />} />
           <Route path="/register" element={<Register />} />
-          <Route 
-            path="/profile" 
-            element={<Profile user={user} accounts={account} notifications={notification} setLogout={setLoggedIn} />}  />
-          <Route path="/transfer" element={<Transfer setLogout={setLoggedIn}/>} />
-          <Route path="/messages" element={<Message setLogout={setLoggedIn} />} />
-          <Route path="/my-bank" element={<MyBank setLogout={setLoggedIn} />} />
+          <Route path="/dashboard" element={loggedIn ? <Dashboard /> : <Login setLoggedIn={setLoggedIn}/>}/>
         </Routes>
       </Router>
     </div>
