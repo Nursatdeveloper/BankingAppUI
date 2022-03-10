@@ -20,7 +20,8 @@ function App() {
           <Route path="/" element={<Login setLoggedIn={setLoggedIn} />} />
           <Route path="/login" element={<Login setLoggedIn={setLoggedIn} />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/dashboard" element={loggedIn ? <Dashboard /> : <Login setLoggedIn={setLoggedIn}/>}/>
+          {/*Production: <Route path="/dashboard" element={loggedIn ? <Dashboard /> : <Login setLoggedIn={setLoggedIn}/>}/>*/}
+          <Route path="/dashboard" element={<Dashboard />} />
         </Routes>
       </Router>
     </div>
