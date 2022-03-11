@@ -12,21 +12,17 @@ import Dashboard from './pages/Dashboard';
 
 function App() {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
-  const [id, setId] = useState<string>('');
-  const [token, setToken] = useState<string>('');
   useEffect(()=>{
-    console.log(id)
-    console.log(token)
   },)
   return (
     <div className="App">
       <Router>
         <Routes>
-          <Route path="/" element={<Login setLoggedIn={setLoggedIn} setId={setId} setToken={setToken}/>} />
-          <Route path="/login" element={<Login setLoggedIn={setLoggedIn} setId={setId} setToken={setToken}/>} />
+          <Route path="/" element={<Login setLoggedIn={setLoggedIn} />} />
+          <Route path="/login" element={<Login setLoggedIn={setLoggedIn}/>} />
           <Route path="/register" element={<Register />} />
           {/*Production: <Route path="/dashboard" element={loggedIn ? <Dashboard /> : <Login setLoggedIn={setLoggedIn}/>}/>*/}
-          <Route path="/dashboard" element={<Dashboard setLogout={setLoggedIn} id={id} token={token}/>} />
+          <Route path="/dashboard" element={<Dashboard setLogout={setLoggedIn} />} />
         </Routes>
       </Router>
     </div>

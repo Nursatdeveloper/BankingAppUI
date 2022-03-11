@@ -6,37 +6,49 @@ import '../App.css'
 import Account from '../models/Account';
 
 interface MyCardsProps{
-  id:string,
-  token:string
+  setAccountType:(account:string) => void
 }
 
-const MyCards:FC<MyCardsProps> = ({id, token}) => {
+const MyCards:FC<MyCardsProps> = ({setAccountType}) => {
   const [lastDigits, setLastDigits] = useState<string>('')
-  //const [id, setId] = useState<string>('');
-  //const [token, setToken] = useState<string>('');
+  const [id, setId] = useState<string>('');
+  const [token, setToken] = useState<string>('');
   const [accounts, setAccounts] = useState<Account[]>([]);
   const invisibleCardNumber = "****   ****   ****";
   useEffect(()=> {
-    axios.get(API_URL+'/user/get-user-by-id/'+id, {
-      headers:{
-        'Authorization': `Bearer ${token}`
-      }
-    }).then(response => {
-      console.log(response.data)
-      setAccounts(response.data.accounts)
-      setLastDigits(response.data.cardNumber.slice(12, 16))
-    })
-    console.log(id)
-    console.log(accounts)
+    const id = sessionStorage.getItem('id');
+    setId(`${id}`);
+    const token = sessionStorage.getItem('token');
+    setToken(`${token}`)
+    const url = `${API_URL}/user/get-user-by-id/${id}`
+    fetch(url, {
+      method: 'GET',
+      headers: {
+        'Accept': 'application/json',
+        'Authorization': `${token}`
+      },
+    }).then (function (response) {return response.json()})
+      .then(function (json) {
+        setAccounts(json.accounts)
+        setLastDigits(json.cardNumber)
+        if(json.accounts.length == 1){
+          setAccountType(json.accounts[0].accountType)
+        }else if(json.accounts.length == 2){
+          setAccountType('Текущий счет')
+        }
+      })
+      .catch(function (error) {console.log(error)});
 
   },[])
 
   const currentAccount = {
-    backgroundColor: '#DAA520'
+    backgroundColor: '#DAA520',
+    color:'#4d4d4d',
   }
 
   const depositAccount = {
-    backgroundColor:'#D2E4FD'
+    backgroundColor:'#000058',
+    color:"#a6a6a6",
   }
 
   return (
@@ -48,10 +60,12 @@ const MyCards:FC<MyCardsProps> = ({id, token}) => {
 
       {accounts.map(account => 
         <Card style={
-          account.accountType === 'Текущий счет'? 
-            {backgroundColor: '#DAA520', color: '#4d4d4d'} :
-            {backgroundColor:'#000058', color:"#a6a6a6"} 
-          }>
+          account.accountType === 'Текущий счет' ? 
+            currentAccount :
+            depositAccount
+          }
+          onClick={() => setAccountType(account.accountType)}
+        >
 
           <Section1>
             <div className='golden__thing'></div>
@@ -66,7 +80,7 @@ const MyCards:FC<MyCardsProps> = ({id, token}) => {
           <Section2>
            {account.accountType === 'Текущий счет' ?
             <CardNumberWrapper>
-              {invisibleCardNumber} {lastDigits}
+              {invisibleCardNumber} {lastDigits.slice(12, 16)}
             </CardNumberWrapper>
            :null}
           </Section2>
@@ -94,8 +108,7 @@ const MyCards:FC<MyCardsProps> = ({id, token}) => {
 export default MyCards
 
 const MyCardsWrapper = styled.div`
-  margin-right:10px;
-  width:400px;
+  width:30%;
   background-color:#F5F7F9;
 `
 
@@ -109,8 +122,8 @@ const Title = styled.div`
 `
 
 const Card = styled.div`
-  margin-left:20px;
-  margin-right:20px;
+  margin-left:30px;
+  margin-right:30px;
   height:200px;
   border-radius:5px;
   opacity:0.7;

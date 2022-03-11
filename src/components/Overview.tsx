@@ -1,9 +1,27 @@
-import React from 'react'
+import React, { FC } from 'react'
+import styled from 'styled-components'
 
-const Overview = () => {
+interface OverviewProps{
+  accountType:string
+}
+
+const Overview:FC<OverviewProps> = ({accountType}) => {
   return (
-    <div>Overview</div>
+    <OverviewWrapper>
+      <AccountType>
+        {accountType}
+      </AccountType>
+    </OverviewWrapper>
+
   )
 }
 
 export default Overview
+
+const OverviewWrapper = styled.div`
+
+`
+
+const AccountType = styled.div`
+
+`

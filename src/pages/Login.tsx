@@ -9,11 +9,9 @@ import Notification from '../models/Notification'
 
 interface LoginProps{
     setLoggedIn:(logged:boolean) => void,
-    setId: (id:string) => void,
-    setToken: (token:string) => void
 }
 
-const Login:FC<LoginProps> = ({setLoggedIn, setId, setToken}) => {
+const Login:FC<LoginProps> = ({setLoggedIn}) => {
     const [telephone, setTelephone] = useState('');
     const [password, setPassword]  = useState('');
 
@@ -31,9 +29,9 @@ const Login:FC<LoginProps> = ({setLoggedIn, setId, setToken}) => {
         .then(response => {
             console.log(response.data)
             if(response.data.isSuccess){
-                setId(response.data.userId)
-                setToken(response.data.message)
                 setLoggedIn(true);
+                sessionStorage.setItem('id', response.data.userId)
+                sessionStorage.setItem('token', `Bearer ${response.data.message}`)
                 redirect("/dashboard");
             }
             else{

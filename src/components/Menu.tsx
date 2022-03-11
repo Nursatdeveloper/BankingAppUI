@@ -28,7 +28,7 @@ const Menu:FC<MenuProps> = ({setLogout}) => {
     function logout(){
         setLogout(false);
         sessionStorage.removeItem('id');
-        sessionStorage.removeItem('authToken');
+        sessionStorage.removeItem('token');
         redirect('/login')
     }
   return (
@@ -76,7 +76,7 @@ const Menu:FC<MenuProps> = ({setLogout}) => {
 export default Menu
 //#CDE9D6 - green, #D2E4FD = blue, #FFF1CB = yellow, #F8D3CF = red
 const MenuWrapper = styled.div`
-    width:100px;
+    width:7%;
     height:100vh;
     background-color:white;
     -webkit-box-shadow: 4px 1px 13px -2px rgba(34, 60, 80, 0.2);
