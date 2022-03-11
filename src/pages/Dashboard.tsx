@@ -15,7 +15,8 @@ interface DashboardProps{
 }
 
 const Dashboard:FC<DashboardProps> = ({setLogout}) => {
-    const [accountType, setAccountType] = useState<string>('')
+    const [accountType, setAccountType] = useState<string>('');
+    const [accountNames, setAccountNames] = useState<string[]>([]);
 
   return (
     <Container>
@@ -23,10 +24,10 @@ const Dashboard:FC<DashboardProps> = ({setLogout}) => {
         <Menu setLogout={setLogout}/>
 
         <Body>
-            <MyCards setAccountType={setAccountType}/>
+            <MyCards setAccountType={setAccountType} setAccountNames={setAccountNames}/>
             <Wrapper>
                 <OverviewHeader />
-                <Overview accountType={accountType}/>
+                <Overview accountType={accountType} accountNames={accountNames}/>
                 <Transactions />
             </Wrapper>
         </Body>

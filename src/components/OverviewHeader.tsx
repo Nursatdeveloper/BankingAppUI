@@ -40,13 +40,15 @@ const OverviewHeader = () => {
         setShowNotification(!showNotification)
 
         const userId = sessionStorage.getItem('id')
+        const token = sessionStorage.getItem('token')
         const changeUserNotificationStatusCommand = {
             userId: userId
         }
         fetch(API_URL+'/user/change-notification-status', {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json;charset=utf-8'
+              'Content-Type': 'application/json;charset=utf-8',
+              'Authorization': `${token}`
             },
             body: JSON.stringify(changeUserNotificationStatusCommand)
           }).then (function (response) {return response.json()})

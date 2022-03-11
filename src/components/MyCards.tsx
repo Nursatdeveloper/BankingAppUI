@@ -6,10 +6,11 @@ import '../App.css'
 import Account from '../models/Account';
 
 interface MyCardsProps{
-  setAccountType:(account:string) => void
+  setAccountType:(account:string) => void,
+  setAccountNames:(accountNames:string[]) => void
 }
 
-const MyCards:FC<MyCardsProps> = ({setAccountType}) => {
+const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames}) => {
   const [lastDigits, setLastDigits] = useState<string>('')
   const [id, setId] = useState<string>('');
   const [token, setToken] = useState<string>('');
@@ -33,8 +34,10 @@ const MyCards:FC<MyCardsProps> = ({setAccountType}) => {
         setLastDigits(json.cardNumber)
         if(json.accounts.length == 1){
           setAccountType(json.accounts[0].accountType)
+          setAccountNames(json.accounts[0].accountType)
         }else if(json.accounts.length == 2){
           setAccountType('Текущий счет')
+          setAccountNames([json.accounts[0].accountType, json.accounts[1].accountType])
         }
       })
       .catch(function (error) {console.log(error)});
@@ -110,6 +113,8 @@ export default MyCards
 const MyCardsWrapper = styled.div`
   width:30%;
   background-color:#F5F7F9;
+  z-index:4;
+  position:relative;
 `
 
 const Title = styled.div`
