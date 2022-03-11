@@ -216,6 +216,7 @@ const NotificationViewer = styled.div`
     z-index:2;
     top:61px;
     height:300px;
+    background-color:white;
     transition: height, 0.5s ease-in-out;
     overflow-y:scroll;
     .notification{
