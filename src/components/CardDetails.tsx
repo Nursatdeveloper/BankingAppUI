@@ -44,7 +44,7 @@ const CardDetails = () => {
             </span>
           </div>
           <div className='last__transaction'>
-            Посленяя транзаксия в 24.03.2022
+            Посленяя транзакция в 24.03.2022
           </div>
         </Income>
         <Expense>
@@ -59,7 +59,7 @@ const CardDetails = () => {
                 </svg>
             </div>
             <div className='last__transaction'>
-              Посленяя транзаксия в 24.03.2022
+              Посленяя транзакция в 24.03.2022
             </div>
         </Expense>
       </DataWrapper>

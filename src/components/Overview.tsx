@@ -36,7 +36,6 @@ const Overview:FC<OverviewProps> = ({accountType}) => {
 export default Overview
 
 const OverviewWrapper = styled.div`
-  border:1px solid #e3e3e3;
   height:400px;
   margin-left:20px;
   margin-right:20px;

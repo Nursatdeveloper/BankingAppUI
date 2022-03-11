@@ -7,7 +7,8 @@ interface BankOperation{
     bankOperationMoneyAmount:number,
     bankOperationMakerId:number,
     fromAccount:string,
-    toAccount:string
+    toAccount:string,
+    currencyType:string
 }
 
 export default BankOperation
