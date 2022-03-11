@@ -22,4 +22,22 @@
     display: none;
 }
 
+.showReplenish{
+    margin-left:0px;
+    transition:margin-left, 0.5s ease-in-out;
+}
+.hideReplenish{
+    margin-left:-320px;
+    transition:margin-left, 0.5s ease-in-out;
+}
+
+.showTransfer{
+    margin-left:0px;
+    transition:margin-left, 0.5s ease-in-out;
+}
+.hideTransfer{
+    margin-left:-320px;
+    transition:margin-left, 0.5s ease-in-out;
+}
+
 
