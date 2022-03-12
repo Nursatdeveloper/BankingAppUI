@@ -17,6 +17,7 @@ const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames}) => {
   const [accounts, setAccounts] = useState<Account[]>([]);
   const invisibleCardNumber = "****   ****   ****";
   useEffect(()=> {
+    console.log(formatBalance("234000"))
     const id = sessionStorage.getItem('id');
     setId(`${id}`);
     const token = sessionStorage.getItem('token');
@@ -44,6 +45,22 @@ const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames}) => {
 
   },[])
 
+  function formatBalance(balance:string){
+    var array = [];
+    var count = 3
+    for(let i = balance.length-1; i >= 0; i--){
+      if(count > 0){
+        array.unshift(balance[i]);
+        count--
+      }
+      else{
+        array.unshift(",")
+        count = 3;
+      }
+    }
+    return array.toString();
+  }
+
   const currentAccount = {
     backgroundColor: '#DAA520',
     color:'#4d4d4d',
@@ -61,13 +78,14 @@ const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames}) => {
         Мои счета
       </Title>
 
-      {accounts.map(account => 
+      {accounts.map((account, i) => 
         <Card style={
           account.accountType === 'Текущий счет' ? 
             currentAccount :
             depositAccount
           }
           onClick={() => setAccountType(account.accountType)}
+          key={i++}
         >
 
           <Section1>

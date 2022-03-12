@@ -1,8 +1,61 @@
-import React, { useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import styled from 'styled-components'
+import BankOperation from '../models/BankOperation';
 
-const CardDetails = () => {
+interface CardDetailsProps{
+  lastTransactions:string[],
+  operations:BankOperation[]
+}
+
+const CardDetails: FC<CardDetailsProps> = ({lastTransactions, operations}) => {
   const [timePeriod, setTimePeriod] = useState<string>('Неделя');
+  const [revenue, setRevenue] = useState<number>(0);
+  const [expense, setExpense] = useState<number>(0);
+  useEffect(() => {
+    calculateRevenue()
+  }, [operations])
+
+  function calculateRevenue(){
+    var today = new Date();
+    var from:string = "";
+    if(timePeriod === 'Неделя'){
+      var fromDate = new Date(today.getFullYear(), today.getMonth(), today.getDate()-7);
+      from = dateToString(fromDate);
+    }else if(timePeriod === 'Месяц'){
+      var fromDate = new Date(today.getFullYear(), today.getMonth()-1, today.getDate());
+      from = dateToString(fromDate);
+    }else{
+      var fromDate = new Date(today.getFullYear()-1, today.getMonth(), today.getDate());
+      from = dateToString(fromDate);
+    }
+    setRevenue(calculateSumBetween(from, 'Пополнение'))
+    setExpense(calculateSumBetween(from, 'Перевод'))
+  }
+
+  function dateToString(date:Date){
+    var dd = String(date.getDate()).padStart(2, '0');
+    var mm = String(date.getMonth() + 1).padStart(2, '0'); //January is 0!
+    var yyyy = date.getFullYear();
+    const time = yyyy+'-'+mm+'-'+dd;
+    return time;
+  }
+  
+  function calculateSumBetween(from:string, type:string){
+    var amount = 0;
+    for(let i = operations.length-1; i >= 0; i-- ){
+      if(operations[i].bankOperationTime.slice(0, 10) !== from){
+        if(operations[i].bankOperationType === type){
+          amount += operations[i].bankOperationMoneyAmount;
+        }
+      }
+      else{
+        break;
+      }
+    }
+    return amount;
+  }
+
+
 
   function handlePeriodChange(period:string){
     if(period === 'Неделя'){
@@ -36,7 +89,7 @@ const CardDetails = () => {
             <span className='period'>{timePeriod}</span>
           </div>
           <div className='money__amount'>
-            10,500 KZT
+            {revenue} KZT
             <span>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-up" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/>
@@ -44,7 +97,7 @@ const CardDetails = () => {
             </span>
           </div>
           <div className='last__transaction'>
-            Посленяя транзакция в 24.03.2022
+            Посленяя транзакция в {lastTransactions[0]}
           </div>
         </Income>
         <Expense>
@@ -53,13 +106,13 @@ const CardDetails = () => {
               <span className='period'>{timePeriod}</span>
             </div>
             <div className='money__amount'>
-              5,300,000 KZT
+              {expense} KZT
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-down" viewBox="0 0 16 16">
                   <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z"/>
                 </svg>
             </div>
             <div className='last__transaction'>
-              Посленяя транзакция в 24.03.2022
+              Посленяя транзакция в {lastTransactions[1]}
             </div>
         </Expense>
       </DataWrapper>

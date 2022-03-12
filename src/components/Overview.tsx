@@ -1,18 +1,22 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import CardDetails from './CardDetails'
 import '../App.css'
 import API_URL from '../api_url'
 import Account from '../models/Account'
+import BankOperation from '../models/BankOperation'
 
 interface OverviewProps{
   accountType:string,
-  accountNames:string[]
+  accountNames:string[],
+  operations:BankOperation[]
 }
 
-const Overview:FC<OverviewProps> = ({accountType, accountNames}) => {
+const Overview:FC<OverviewProps> = ({accountType, accountNames, operations}) => {
 
   const [showForm, setShowForm] = useState<string>('');
+  const [id, setId] = useState<string>('');
+  const [token, setToken] = useState<string>('');
 
   const [transferType, setTransferType] = useState<string>('');
   const [clientPhoneNumber, setClientPhoneNumber] = useState<string>('');
@@ -20,6 +24,29 @@ const Overview:FC<OverviewProps> = ({accountType, accountNames}) => {
   const [clientAccount, setClientAccounts] = useState<Account[]>([]);
   const [transferToAccount, setTransferToAccount] = useState<string>('');
   const [money, setMoney] = useState<string>('');
+
+  const [lastTransactions, setLastTransactions] = useState<string[]>([]);
+
+  useEffect(() => {
+    const id = sessionStorage.getItem('id')
+    setId(`${id}`);
+    const token = sessionStorage.getItem('token');
+    setToken(`${token}`);
+
+    var transactions:string[] = [];
+    for(let i = operations.length-1; i >= 0; i--){
+      if(transactions.length == 2){
+        break;
+      }
+      if(operations[i].bankOperationType === 'Пополнение'){
+        transactions[0] = operations[i].bankOperationTime.slice(0, 10);
+      }else{
+        transactions[1] = operations[i].bankOperationTime.slice(0, 10);
+      }
+    }
+    setLastTransactions(transactions)
+
+  },[operations])
 
 
   function handleFormChange(type:string){
@@ -39,7 +66,6 @@ const Overview:FC<OverviewProps> = ({accountType, accountNames}) => {
   }
 
   function handleTelephoneChange(tel:string){
-    const token = sessionStorage.getItem('token')
     const url = `${API_URL}/user/get-user-by-telephone/${tel}`;
     setClientPhoneNumber(tel)
     setTimeout(() => fetch(url, {
@@ -58,8 +84,6 @@ const Overview:FC<OverviewProps> = ({accountType, accountNames}) => {
   }
 
   function handleTransfer(){
-    const id = sessionStorage.getItem('id')
-    const token = sessionStorage.getItem('token')
     if(transferType === 'Между счетами'){
       const url = `${API_URL}/BankOperation/make-transfer-myaccount`;
       const MakeTransferCommand = {
@@ -83,17 +107,59 @@ const Overview:FC<OverviewProps> = ({accountType, accountNames}) => {
           setMoney('')
         })
         .catch(function (error) {console.log(error)})
-    }else{
+    }
+    else{
+      const url = `${API_URL}/BankOperation/make-transfer`;
       const MakeTransferCommand = {
-        userId: id,
-        fromAccount: accountType,
-        toAccount: transferToAccount,
+        transferMakerId: id,
+        transferFromAccountType: accountType,
+        transferToAccountType: transferToAccount,
         transferAmount: money,
-        currencyType: 'KZT'
+        currencyType: 'KZT',
+        receiverTelephone: clientPhoneNumber
       }
-      // To DO
+      fetch(url,{
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `${token}`
+        },
+        body: JSON.stringify(MakeTransferCommand)
+      }).then (function (response) {return response.json()})
+        .then(function (json) {
+          alert(json.message);
+          setTransferToAccount('')
+          setClientPhoneNumber('');
+          setMoney('')
+          setClientName('')
+        })
+        .catch(function (error) {console.log(error)})  
     }
   }
+
+  function handleReplenish(){
+    const MakeDepositCommand = {
+      userId: id,
+      depositAmount: money,
+      depositAccountType: accountType,
+      currencyType: 'KZT'
+    }
+    const url = `${API_URL}/bankoperation/make-deposit`
+    fetch(url,{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${token}`
+      },
+      body: JSON.stringify(MakeDepositCommand)
+    }).then (function (response) {return response.json()})
+      .then(function (json) {
+        alert(json.message);
+        setMoney('')
+      })
+      .catch(function (error) {console.log(error)})  
+  }
+
   return (
     <OverviewWrapper>
       <AccountType>
@@ -114,16 +180,18 @@ const Overview:FC<OverviewProps> = ({accountType, accountNames}) => {
           <span>Перевод</span>
         </TransferButton>
       </BankOperationButtons>
-      <CardDetails />
+
+      <CardDetails lastTransactions={lastTransactions} operations={operations}/>
+
       <ReplenishForm className={showForm === 'replenish' ? 'showReplenish' : 'hideReplenish'}>
           <div>
             <span>Счет для пополнения: {accountType}</span>
           </div>
           <div>
-            Сумма пополнения: <input /> 
+            Сумма пополнения: <input type='text' value={money} onChange={e => setMoney(e.target.value)}/> 
             <span>KZT</span>
           </div>
-          <button>Пополнить</button>
+          <button onClick={handleReplenish}>Пополнить</button>
       </ReplenishForm>
       <TransferForm className={showForm === 'transfer' ? 'showTransfer' : 'hideTransfer'}>
         <div>

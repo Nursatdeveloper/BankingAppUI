@@ -8,6 +8,7 @@ import Overview from '../components/Overview'
 import OverviewHeader from '../components/OverviewHeader'
 import Transactions from '../components/Transactions'
 import Account from '../models/Account'
+import BankOperation from '../models/BankOperation'
 import Notification from '../models/Notification'
 
 interface DashboardProps{
@@ -17,6 +18,7 @@ interface DashboardProps{
 const Dashboard:FC<DashboardProps> = ({setLogout}) => {
     const [accountType, setAccountType] = useState<string>('');
     const [accountNames, setAccountNames] = useState<string[]>([]);
+    const [operations, setOperations] = useState<BankOperation[]>([]);
 
   return (
     <Container>
@@ -27,8 +29,8 @@ const Dashboard:FC<DashboardProps> = ({setLogout}) => {
             <MyCards setAccountType={setAccountType} setAccountNames={setAccountNames}/>
             <Wrapper>
                 <OverviewHeader />
-                <Overview accountType={accountType} accountNames={accountNames}/>
-                <Transactions />
+                <Overview accountType={accountType} accountNames={accountNames} operations={operations}/>
+                <Transactions setBankOperations={setOperations}/>
             </Wrapper>
         </Body>
 

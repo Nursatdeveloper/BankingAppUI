@@ -1,9 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import API_URL from '../api_url';
 import BankOperation from '../models/BankOperation'
 
-const Transactions = () => {
+interface TransactionsProps {
+  setBankOperations:(operations: BankOperation[]) => void
+}
+
+const Transactions:FC<TransactionsProps> = ({setBankOperations}) => {
   const [fromDate, setFromDate] = useState<string>('text');
   const [toDate, setToDate] = useState<string>('text');
   const [operations, setOperations] = useState<BankOperation[]>([]);
@@ -20,8 +24,8 @@ const Transactions = () => {
       },
     }).then (function (response) {return response.json()})
       .then(function (json) {
-        console.log(json)
         setOperations(json);
+        setBankOperations(json)
       })
       .catch(function (error) {console.log(error)}), 1500)
   },[])
@@ -50,8 +54,20 @@ const Transactions = () => {
           <TransactionColumns key={operation.bankOperationId}>
             <div className='type'>{operation.bankOperationType}</div>
             <div className='time'>{operation.bankOperationTime.slice(0, 10)} / {operation.bankOperationTime.slice(12, 16)}</div>
-            <div className='from'>{operation.fromAccount}</div>
-            <div className='to'>{operation.toAccount}</div>
+            <div className='from'>
+              <div>{operation.bankOperationMaker}</div>
+              <div className='small__font'>
+                {operation.fromAccount}
+              </div>
+            </div>
+
+            <div className='to'>
+              <div>{operation.bankOperationParticipant}</div>
+              <div className='small__font'>
+                {operation.toAccount}
+              </div>
+            </div>
+
             <div className='amount' 
                 style={operation.bankOperationType === 'Пополнение'?
                 {color:'#46a062'} : {color:'#e65c4d'}  
@@ -74,7 +90,7 @@ export default Transactions
 
 const TransactionsWrapper = styled.div`
   border:1px solid #e3e3e3;
-  height:300px;
+  height:290px;
   margin-left:20px;
   margin-right:20px;
   position:relative;
@@ -118,16 +134,15 @@ const TransactionBody = styled.div`
  right:0;
  left:0;
  bottom:0;
-
 `
 const TransactionColumns = styled.div`
   height:35px;
   border-bottom:1px solid #e3e3e3;
   display:flex;
+  padding-top:5px;
+  padding-bottom:5px;
   div{   
     color:#666;
-    align-items:center;
-    margin-top:5px;
     text-align:center;
     font-size:14px;
   }
@@ -150,11 +165,14 @@ const TransactionColumns = styled.div`
   .currency{
     width:5%;
   }
+  .small__font{
+    font-size:11px;
+  }
 `
 
 const TransactionList =styled.div`
   position:absolute;
-  top:35px;
+  top:45px;
   right:0;
   left:0;
   bottom:0;
