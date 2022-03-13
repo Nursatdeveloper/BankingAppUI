@@ -7,10 +7,11 @@ import Account from '../models/Account';
 
 interface MyCardsProps{
   setAccountType:(account:string) => void,
-  setAccountNames:(accountNames:string[]) => void
+  setAccountNames:(accountNames:string[]) => void,
+  setAccountStatus:(status:boolean) => void
 }
 
-const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames}) => {
+const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames, setAccountStatus}) => {
   const [lastDigits, setLastDigits] = useState<string>('')
   const [id, setId] = useState<string>('');
   const [token, setToken] = useState<string>('');
@@ -36,9 +37,11 @@ const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames}) => {
         if(json.accounts.length == 1){
           setAccountType(json.accounts[0].accountType)
           setAccountNames(json.accounts[0].accountType)
+          setAccountStatus(json.accounts[0].isActive)
         }else if(json.accounts.length == 2){
           setAccountType('Текущий счет')
           setAccountNames([json.accounts[0].accountType, json.accounts[1].accountType])
+          json.accounts.map((a:Account) => a.accountType === 'Текущий счет' ? setAccountStatus(a.isActive) : null)
         }
       })
       .catch(function (error) {console.log(error)});

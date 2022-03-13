@@ -7,14 +7,17 @@ import Account from '../models/Account'
 import BankOperation from '../models/BankOperation'
 
 interface OverviewProps{
+  accountStatus:boolean,
   accountType:string,
   accountNames:string[],
   operations:BankOperation[]
 }
 
-const Overview:FC<OverviewProps> = ({accountType, accountNames, operations}) => {
+const Overview:FC<OverviewProps> = ({accountType, accountNames, operations, accountStatus}) => {
 
   const [showForm, setShowForm] = useState<string>('');
+  const [showConfirm, setShowConfirm] = useState<boolean>(false);
+  const [confirmPassword, setConfirmPassword] = useState<string>('');
   const [id, setId] = useState<string>('');
   const [token, setToken] = useState<string>('');
 
@@ -63,6 +66,7 @@ const Overview:FC<OverviewProps> = ({accountType, accountNames, operations}) => 
         setShowForm('')
       }  
     }
+    setShowConfirm(false)
   }
 
   function handleTelephoneChange(tel:string){
@@ -160,10 +164,46 @@ const Overview:FC<OverviewProps> = ({accountType, accountNames, operations}) => 
       .catch(function (error) {console.log(error)})  
   }
 
+  function changeAccountStatus(){
+    const ChangeStatusCommand = {
+      userId:id,
+      accountType: accountType,
+      password: confirmPassword
+    }
+    var url = "";
+    if(accountStatus === true){
+      url = `${API_URL}/account/deactivate-account`
+    }else{
+      url = `${API_URL}/account/activate-account`
+    }
+    fetch(url,{
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `${token}`
+      },
+      body: JSON.stringify(ChangeStatusCommand)
+    }).then (function (response) {return response.json()})
+      .then(function (message) {
+        alert(message);
+        setConfirmPassword('');
+        setShowConfirm(false)
+      })
+      .catch(function (error) {console.log(error)}) 
+
+  }
+  function showConfirmForm(){
+    setShowConfirm(!showConfirm)
+    setShowForm('');
+  }
+
   return (
     <OverviewWrapper>
       <AccountType>
         {accountType}
+        <button className='deactivate__button' onClick={showConfirmForm}>
+          {accountStatus ? 'Деактивировать' : 'Активировать'}
+        </button>
       </AccountType>
       <BankOperationButtons>
         <ReplenishButton onClick={()=>handleFormChange('replenish')}>
@@ -234,6 +274,15 @@ const Overview:FC<OverviewProps> = ({accountType, accountNames, operations}) => 
           <button onClick={handleTransfer}>Перевод</button>
         </div>
       </TransferForm>
+
+      <ConfirmForm className={showConfirm ? 'showConfirm' : 'hideConfirm'}>
+        <div>Вы уверены?</div>
+        <div>Пароль: <input type='password' value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)}/></div>
+        <div>
+          <button className='submit' onClick={changeAccountStatus}>Принять</button>
+          <button className='cancel' onClick={() => setShowConfirm(false)}>Отмена</button>
+        </div>
+      </ConfirmForm>
       
     </OverviewWrapper>
 
@@ -322,6 +371,18 @@ const AccountType = styled.div`
   font-size:18px;
   margin-left:10px;
   margin-top:10px;
+  .deactivate__button{
+    border:1px solid #666;
+    padding-top:3px;
+    padding-bottom:3px;
+    background-color:white;
+    color:#666;
+    margin-left:20px;
+    transition:background-color, 0.5s ease-in-out;
+    :hover{
+      background-color:#f2f2f2;
+    }
+  }
 `
 
 const ReplenishForm = styled.div`
@@ -401,5 +462,44 @@ const TransferForm = styled.div`
     cursor:pointer;
     padding-top:5px;
     padding-bottom:5px;
+  }
+`
+
+const ConfirmForm = styled.div`
+  border:1px solid #a6a6a6;
+  width:250px;
+  position:absolute;
+  height:105px;
+  top:50px;
+  background-color:white;
+  div{
+    padding-top:5px;
+    padding-bottom:5px;
+    padding-left:10px;
+    padding-right:5px;
+    color:#666;
+    input{
+      width:140px;
+      outline:none;
+    }
+    .submit{
+      background-color:#46a062;
+      border:0;
+      color:white;
+      height:23px;
+      padding-left:10px;
+      padding-right:10px;
+      cursor:pointer;
+    }
+    .cancel{
+      background-color:#e65c4d;
+      border:0;
+      color:white;
+      height:23px;
+      padding-left:10px;
+      padding-right:10px;
+      margin-left:20px;
+      cursor:pointer;
+    }
   }
 `

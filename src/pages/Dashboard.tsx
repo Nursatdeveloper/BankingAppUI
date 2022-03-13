@@ -19,6 +19,7 @@ const Dashboard:FC<DashboardProps> = ({setLogout}) => {
     const [accountType, setAccountType] = useState<string>('');
     const [accountNames, setAccountNames] = useState<string[]>([]);
     const [operations, setOperations] = useState<BankOperation[]>([]);
+    const [accountStatus, setAccountStatus] = useState<boolean>(false);
 
   return (
     <Container>
@@ -26,10 +27,10 @@ const Dashboard:FC<DashboardProps> = ({setLogout}) => {
         <Menu setLogout={setLogout}/>
 
         <Body>
-            <MyCards setAccountType={setAccountType} setAccountNames={setAccountNames}/>
+            <MyCards setAccountType={setAccountType} setAccountNames={setAccountNames} setAccountStatus={setAccountStatus}/>
             <Wrapper>
                 <OverviewHeader />
-                <Overview accountType={accountType} accountNames={accountNames} operations={operations}/>
+                <Overview accountType={accountType} accountNames={accountNames} operations={operations} accountStatus={accountStatus}/>
                 <Transactions setBankOperations={setOperations}/>
             </Wrapper>
         </Body>
