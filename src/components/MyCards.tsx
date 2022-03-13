@@ -16,9 +16,13 @@ const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames, setAccountSt
   const [id, setId] = useState<string>('');
   const [token, setToken] = useState<string>('');
   const [accounts, setAccounts] = useState<Account[]>([]);
+  const [showForm, setShowForm] = useState<boolean>(false);
+  const [addAccountType, setAddAccountType] = useState<string>('');
+  const [agreementCheckbox, setAgreementCheckbox] = useState<boolean>(false);
+  const [current, setCurrent] = useState<boolean>(false);
+  const [deposit, setDeposit] = useState<boolean>(false);
   const invisibleCardNumber = "****   ****   ****";
   useEffect(()=> {
-    console.log(formatBalance("234000"))
     const id = sessionStorage.getItem('id');
     setId(`${id}`);
     const token = sessionStorage.getItem('token');
@@ -38,6 +42,11 @@ const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames, setAccountSt
           setAccountType(json.accounts[0].accountType)
           setAccountNames(json.accounts[0].accountType)
           setAccountStatus(json.accounts[0].isActive)
+          if(json.accounts[0].accountType === 'Депозит'){
+            setDeposit(true);
+          }else{
+            setCurrent(true)
+          }
         }else if(json.accounts.length == 2){
           setAccountType('Текущий счет')
           setAccountNames([json.accounts[0].accountType, json.accounts[1].accountType])
@@ -48,20 +57,49 @@ const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames, setAccountSt
 
   },[])
 
-  function formatBalance(balance:string){
+  function formatBalance(money:number){
+    const balance = money.toString()
     var array = [];
-    var count = 3
+    var count = 0
     for(let i = balance.length-1; i >= 0; i--){
-      if(count > 0){
-        array.unshift(balance[i]);
-        count--
+      if(count != 3){
+        array.push(balance[i]);
+        count++ 
       }
       else{
-        array.unshift(",")
-        count = 3;
+        array.push(",")
+        array.push(balance[i])
+        count = 0;
       }
     }
-    return array.toString();
+    array = array.reverse();  
+    var number = '';
+    array.map(n => number += n);
+    return number
+  }
+
+  function openNewAccount(){
+    setShowForm(!showForm)
+  }
+  function createNewAccount(){
+    const url = `${API_URL}/account/create-account`
+    const CreateAccountCommand = {
+      userId: id,
+      accountType:addAccountType
+    }
+    fetch(url, {
+      method:"POST",
+      headers:{
+        'Content-Type':'application/json',
+        'Authorization':`${token}`
+      },
+      body: JSON.stringify(CreateAccountCommand)
+    }).then(response => response.json())
+    .then(result => {
+      alert(result)
+      window.location.reload()
+    })
+    .catch(error => console.log(error))
   }
 
   const currentAccount = {
@@ -80,6 +118,36 @@ const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames, setAccountSt
       <Title>
         Мои счета
       </Title>
+      <AddAccountForm className={showForm ? 'showOpenNewAccountForm' : 'hideOpenNewAccountForm'} >
+        <div className={current === true ? 'hide' : 'accountType'}  onClick={()=> setAddAccountType('Текущий счет')}>
+          Открыть Текущий счет
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+          </svg>
+        </div>
+        <div className={deposit === true ? 'hide' : 'accountType'} onClick={()=> setAddAccountType('Депозит')}>
+          Открыть Депозит
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-lg" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2Z"/>
+          </svg>
+        </div>
+        {addAccountType !== '' ? <div>Счет: {addAccountType}</div> : null}
+        <div>
+          <a href="#">Посмотреть договор</a>
+        </div>
+        <div>
+          <input type='checkbox' onClick={() => setAgreementCheckbox(!agreementCheckbox)} />
+          <span>Я согласен с условиями соглашения</span>
+        </div>
+        {agreementCheckbox ? 
+        <div>
+          <span>Пароль: </span>
+          <input type='password' className='password__input'/>
+          <button onClick={createNewAccount}>Открыть</button>
+        </div> 
+        
+        : null}
+      </AddAccountForm>
 
       {accounts.map((account, i) => 
         <Card style={
@@ -97,7 +165,7 @@ const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames, setAccountSt
               <div>
                 {account.accountType}
               </div>
-              {account.balance}{account.currencyType}
+              {formatBalance(account.balance)} {account.currencyType}
             </Balance>
           </Section1>
 
@@ -115,7 +183,8 @@ const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames, setAccountSt
 
         </Card>  
       )}
-      <AddCard>
+      {accounts.length === 2 ? null :
+      <AddCard onClick={openNewAccount}>
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-circle" viewBox="0 0 16 16">
         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
         <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
@@ -123,7 +192,7 @@ const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames, setAccountSt
       <div>
         Открыть счет
       </div>
-      </AddCard>
+    </AddCard> }
 
     </MyCardsWrapper>
   )
@@ -145,6 +214,67 @@ const Title = styled.div`
   padding-top:15px;
   padding-bottom:15px;
   border-bottom:2px solid #f2f2f2;
+  position:relative;
+  z-index:3;
+  background-color:#F5F7F9;
+`
+
+const AddAccountForm = styled.div`
+  border:1px solid #a6a6a6;
+  margin-left:30px;
+  margin-right:30px;
+  padding:5px;
+  background-color:#e6e6e6;
+  height:165px;
+  .accountType{
+    border:1px solid #e3e3e3;
+    color:#666;
+    position:relative;
+    transition:color, 0.5s ease-in-out;
+    transition:border, 0.5s ease-in-out;
+    background-color:white;
+    padding-left:10px;
+    padding-top:5px;
+    padding-bottom:5px;
+    svg{
+      position:absolute;
+      right:10px;
+      width:20px;
+      height:20px;
+    }
+    :hover{
+      border:1px solid #000058;
+      color:#000058;
+      cursor:pointer;
+    }
+  }
+  .hide{
+    display:none;
+  }
+  div{
+    padding-left:10px;
+    padding-top:5px;
+    background-color:#e6e6e6;
+    position:relative;
+    font-size:14px;
+    .password__input{
+      width:120px;
+      margin-bottom:10px;
+      outline:none;
+    }
+    button{
+      position:absolute;
+      right:10px;
+      background-color:#000058;
+      color:white;
+      padding-left:15px;
+      padding-right:15px;
+      margin-top:2px;
+      border:0;
+      padding-top:4px;
+      padding-bottom:4px;
+    }
+  }
 `
 
 const Card = styled.div`
@@ -195,7 +325,7 @@ const CardNumberWrapper = styled.div`
 const AddCard = styled.div`
   color:#a6a6a6;
   text-align:center;
-  margin-top:40px;
+  margin-top:30px;
   transition:color, 0.5s ease-in-out;
   svg{
     width:30px;

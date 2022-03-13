@@ -135,10 +135,11 @@ const Overview:FC<OverviewProps> = ({accountType, accountNames, operations, acco
           setTransferToAccount('')
           setClientPhoneNumber('');
           setMoney('')
-          setClientName('')
+          setClientName('')       
         })
         .catch(function (error) {console.log(error)})  
     }
+    window.location.reload()
   }
 
   function handleReplenish(){
@@ -160,6 +161,7 @@ const Overview:FC<OverviewProps> = ({accountType, accountNames, operations, acco
       .then(function (json) {
         alert(json.message);
         setMoney('')
+        window.location.reload()
       })
       .catch(function (error) {console.log(error)})  
   }
@@ -188,14 +190,17 @@ const Overview:FC<OverviewProps> = ({accountType, accountNames, operations, acco
         alert(message);
         setConfirmPassword('');
         setShowConfirm(false)
+        window.location.reload()
       })
       .catch(function (error) {console.log(error)}) 
 
   }
+
   function showConfirmForm(){
     setShowConfirm(!showConfirm)
     setShowForm('');
   }
+
 
   return (
     <OverviewWrapper>
@@ -297,12 +302,13 @@ const OverviewWrapper = styled.div`
   margin-right:20px;
   margin-bottom:20px;
   position:relative;
+  background-color:white;
 `
 
 const BankOperationButtons = styled.div`
   position:absolute;
   right:0px;
-  top:15px;
+  top:5px;
 `
 
 const ReplenishButton = styled.button`

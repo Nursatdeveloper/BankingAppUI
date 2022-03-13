@@ -25,7 +25,6 @@ const OverviewHeader = () => {
               var newNotificationsNumber:number = 0;
               json.map(function(n:Notification){
                   if(n.isSeen == false){
-                      console.log(n)
                     newNotificationsNumber++;
                   }
               })

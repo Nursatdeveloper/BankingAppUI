@@ -7,13 +7,64 @@ interface CardDetailsProps{
   operations:BankOperation[]
 }
 
+interface GraphColoumn{
+  date:string,
+  revenue:number,
+  expense:number
+}
+
 const CardDetails: FC<CardDetailsProps> = ({lastTransactions, operations}) => {
   const [timePeriod, setTimePeriod] = useState<string>('Неделя');
   const [revenue, setRevenue] = useState<number>(0);
   const [expense, setExpense] = useState<number>(0);
+  const [graphArray, setGraphArray] = useState<GraphColoumn[]>([]);
   useEffect(() => {
     calculateRevenue()
+    generateGraph()
   }, [operations])
+
+  function generateGraph(){
+    var array = []
+    var get = 0;
+    var spend = 0;
+    var today = new Date();
+    var date = dateToString(today)
+    var count = 0;
+    var dates:string[] = []
+    operations.map(function(operation){
+      if(!dates.includes(operation.bankOperationTime.slice(5, 10))){
+        dates.push(operation.bankOperationTime.slice(5, 10))
+      }
+    })
+    if(dates.length > 7){
+      dates = dates.slice(dates.length-8, dates.length-1)
+    }
+    for(let i = 0; i < operations.length; i++){
+      if(operations[i].bankOperationTime.slice(5,10) === dates[count]){
+        if(operations[i].bankOperationType === 'Пополнение'){
+          get += operations[i].bankOperationMoneyAmount;
+        }else{
+          spend += operations[i].bankOperationMoneyAmount;
+        }
+      }else{
+        const max = get + spend;
+        const revenue = Math.round(get/max*100)
+        const expense = Math.round(spend/max*100)
+        const obj:GraphColoumn = {
+          date: dates[count],
+          revenue: revenue,
+          expense: expense
+        }
+        array.push(obj);
+        count++;
+        get = 0;
+        spend = 0;
+      }
+    }
+    console.log(array)
+    setGraphArray(array)
+    
+  }
 
   function calculateRevenue(){
     var today = new Date();
@@ -55,8 +106,6 @@ const CardDetails: FC<CardDetailsProps> = ({lastTransactions, operations}) => {
     return amount;
   }
 
-
-
   function handlePeriodChange(period:string){
     if(period === 'Неделя'){
       setTimePeriod(period)
@@ -66,6 +115,28 @@ const CardDetails: FC<CardDetailsProps> = ({lastTransactions, operations}) => {
       setTimePeriod(period)
     }
   }
+
+  function formatBalance(money:number){
+    const balance = money.toString()
+    var array = [];
+    var count = 0
+    for(let i = balance.length-1; i >= 0; i--){
+      if(count != 3){
+        array.push(balance[i]);
+        count++ 
+      }
+      else{
+        array.push(",")
+        array.push(balance[i])
+        count = 0;
+      }
+    }
+    array = array.reverse();  
+    var number = '';
+    array.map(n => number += n);
+    return number
+  }
+
   return (
     <CardDetailsWrapper>
       <TimePeriod>
@@ -81,7 +152,26 @@ const CardDetails: FC<CardDetailsProps> = ({lastTransactions, operations}) => {
       </TimePeriod>
       <DataWrapper>
         <Graph>
-          
+          <div className='data__container'>
+            {graphArray.map((graph, i) => 
+              <div key={i++} className='column__wrapper'>
+                <div className='revenue__column' style={{height:`${graph.revenue}px`}}>
+                </div>
+                <div className='expense__column' style={{height:`${graph.expense}px`}}>
+                </div>
+                <div className='date__wrapper'>
+                  {graph.date}
+                </div>
+              </div>  
+            )}
+          </div>
+          <div className='description'>
+            <div className='green_square'></div>
+            <div>Получено</div>
+            <div className='red_square'></div>
+            <div>Потрачено</div>
+          </div>
+          <div className='statistics'>Статистика по доходам и расходам</div>
         </Graph>
         <Income>
           <div className='header'>
@@ -89,7 +179,7 @@ const CardDetails: FC<CardDetailsProps> = ({lastTransactions, operations}) => {
             <span className='period'>{timePeriod}</span>
           </div>
           <div className='money__amount'>
-            {revenue} KZT
+            {formatBalance(revenue)} KZT
             <span>
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-up" viewBox="0 0 16 16">
                 <path fill-rule="evenodd" d="M8 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L7.5 2.707V14.5a.5.5 0 0 0 .5.5z"/>
@@ -106,7 +196,7 @@ const CardDetails: FC<CardDetailsProps> = ({lastTransactions, operations}) => {
               <span className='period'>{timePeriod}</span>
             </div>
             <div className='money__amount'>
-              {expense} KZT
+              {formatBalance(expense)} KZT
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-arrow-down" viewBox="0 0 16 16">
                   <path fill-rule="evenodd" d="M8 1a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L7.5 13.293V1.5A.5.5 0 0 1 8 1z"/>
                 </svg>
@@ -175,27 +265,68 @@ const DataWrapper = styled.div`
 const Graph = styled.div`
   width:30%;
   border:1px solid #e3e3e3;
-  .header{
-    height:25%;
-    border-bottom:1px solid #e3e3e3;
-    color:#666;
-    padding-left:10px;
-    display:flex;
-    align-items:center;
-  }
+    .data__container{
+      height:79%;
+      display:flex;
+      justify-content:space-between;
+      padding-left:5px;
+      padding-right:5px;
+    }
+    .description{
+      display:flex;
+      color:#a6a6a6;
+      font-size:14px;
+      width:fit-content;
+      margin-left:auto;
+      margin-right:auto;
+    }
+    .column__wrapper{
+      width:14%;
+      height:96%;
+      position:relative;
+      
+      .date__wrapper{
+        position:absolute;
+        bottom:0;
+        font-size:11px;
+        color:#a6a6a6
+      }
 
-  .revenue{
-    width:20px;
-    height:20px;
+    }
+    .revenue__column{
+      width:48%;
+      background-color:#46a062;
+      position:absolute;
+      bottom:15px;
+      left:0px;
+    }
+    .expense__column{
+      width:48%;
+      background-color:#e65c4d;
+      position:absolute;
+      bottom:15px;
+      right:0px;
+    }
+    .statistics{
+      font-size:10px;
+      color:#666666;
+      text-align:center;
+    }
+
+  .green_square{
+    width:15px;
+    height:15px;
     background-color:#46a062;
     margin-right:5px;
+    border-radius:3px;
   }
-  .expense{
-    margin-left:20px;
-    width:20px;
-    height:20px;
+  .red_square{
+    margin-left:15px;
+    width:15px;
+    height:15px;
     background-color:#e65c4d;
     margin-right:5px;
+    border-radius:3px;
   }
 `
 
