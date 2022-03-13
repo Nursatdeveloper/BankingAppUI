@@ -81,7 +81,7 @@ const CardDetails: FC<CardDetailsProps> = ({lastTransactions, operations}) => {
       </TimePeriod>
       <DataWrapper>
         <Graph>
-
+          
         </Graph>
         <Income>
           <div className='header'>
@@ -175,6 +175,28 @@ const DataWrapper = styled.div`
 const Graph = styled.div`
   width:30%;
   border:1px solid #e3e3e3;
+  .header{
+    height:25%;
+    border-bottom:1px solid #e3e3e3;
+    color:#666;
+    padding-left:10px;
+    display:flex;
+    align-items:center;
+  }
+
+  .revenue{
+    width:20px;
+    height:20px;
+    background-color:#46a062;
+    margin-right:5px;
+  }
+  .expense{
+    margin-left:20px;
+    width:20px;
+    height:20px;
+    background-color:#e65c4d;
+    margin-right:5px;
+  }
 `
 
 const Income = styled.div`

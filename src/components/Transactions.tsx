@@ -8,9 +8,11 @@ interface TransactionsProps {
 }
 
 const Transactions:FC<TransactionsProps> = ({setBankOperations}) => {
-  const [fromDate, setFromDate] = useState<string>('text');
-  const [toDate, setToDate] = useState<string>('text');
+  const [fromDate, setFromDate] = useState<string>('');
+  const [toDate, setToDate] = useState<string>('');
   const [operations, setOperations] = useState<BankOperation[]>([]);
+
+  const [from, setFrom] = useState<string>('');
 
   useEffect(() => {
     const id = sessionStorage.getItem('id');
@@ -30,14 +32,24 @@ const Transactions:FC<TransactionsProps> = ({setBankOperations}) => {
       .catch(function (error) {console.log(error)}), 1500)
   },[])
 
+  function handleDateChange(toDate:string){
+    var newOperations:BankOperation[] = []
+    for(let i = 0; i < operations.length; i++){
+      if(operations[i].bankOperationTime.slice(0, 10) >= from && operations[i].bankOperationTime.slice(0, 10) <= toDate){
+        newOperations.push(operations[i])
+      }
+    }
+    setOperations(newOperations)
+  }
+
   return (
     <TransactionsWrapper>
       <TransactionHeader>
         <span>Операции</span>
         <div className='operation__period'>
           <span>Период:</span>
-          <input type={fromDate} onFocus={()=> setFromDate('date')} placeholder="От"/>
-          <input type={toDate} onFocus={()=> setToDate('date')} placeholder="До"/>
+          <input type={fromDate} onFocus={()=> setFromDate('date')} placeholder="От" onChange={e => setFrom(e.target.value)}/>
+          <input type={toDate} onFocus={()=> setToDate('date')} placeholder="До" onChange={(e) => handleDateChange(e.target.value)} />
         </div>
       </TransactionHeader>
       <TransactionBody>
@@ -119,7 +131,7 @@ const TransactionHeader = styled.div`
       border:0;
       margin-left:20px;
       border-radius:3px;
-      width:110px;
+      width:125px;
       outline:none;
     }
     input::placeholder{
