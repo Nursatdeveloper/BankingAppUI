@@ -37,14 +37,18 @@ const Overview:FC<OverviewProps> = ({accountType, accountNames, operations, acco
     setToken(`${token}`);
 
     var transactions:string[] = [];
+    var check = 1;
+    var check2 = 1; 
     for(let i = operations.length-1; i >= 0; i--){
-      if(transactions.length == 2){
-        break;
+      if(operations[i].bankOperationType === 'Пополнение' && check === 1){
+        transactions.push(operations[i].bankOperationTime.slice(0, 10))
+        check = 0;
+      }else if(operations[i].bankOperationType === 'Перевод' && check2 === 1){
+        transactions.push(operations[i].bankOperationTime.slice(0, 10))
+        check2 = 0;
       }
-      if(operations[i].bankOperationType === 'Пополнение'){
-        transactions[0] = operations[i].bankOperationTime.slice(0, 10);
-      }else{
-        transactions[1] = operations[i].bankOperationTime.slice(0, 10);
+      if(check+check2 === 0){
+        break;
       }
     }
     setLastTransactions(transactions)

@@ -22,6 +22,7 @@ const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames, setAccountSt
   const [current, setCurrent] = useState<boolean>(false);
   const [deposit, setDeposit] = useState<boolean>(false);
   const invisibleCardNumber = "****   ****   ****";
+
   useEffect(()=> {
     const id = sessionStorage.getItem('id');
     setId(`${id}`);
@@ -102,6 +103,26 @@ const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames, setAccountSt
     .catch(error => console.log(error))
   }
 
+  function getContractTemplate() {
+    const url = `${API_URL}/document/get-account-contract-template`;
+    fetch(url, {
+      method:"GET",
+      headers:{
+        'Authorization':`${token}`,
+        'Accept':'application/pdf'
+      }
+    }).then(result => result.blob())
+    .then(blob => {
+      const url = window.URL.createObjectURL(new Blob([blob]));
+      const link  = document.createElement('a');
+      link.href=url;
+      link.setAttribute('download', 'Document.pdf')
+      document.body.appendChild(link);
+      link.click();
+      link.parentNode?.removeChild(link);
+    }).catch(error =>  console.log(error))
+  }
+
   const currentAccount = {
     backgroundColor: '#DAA520',
     color:'#4d4d4d',
@@ -133,7 +154,7 @@ const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames, setAccountSt
         </div>
         {addAccountType !== '' ? <div>Счет: {addAccountType}</div> : null}
         <div>
-          <a href="#">Посмотреть договор</a>
+          <div className='download__link' onClick={getContractTemplate}>Посмотреть договор</div>
         </div>
         <div>
           <input type='checkbox' onClick={() => setAgreementCheckbox(!agreementCheckbox)} />
@@ -150,40 +171,67 @@ const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames, setAccountSt
       </AddAccountForm>
 
       {accounts.map((account, i) => 
-        <Card style={
-          account.accountType === 'Текущий счет' ? 
-            currentAccount :
-            depositAccount
-          }
-          onClick={() => setAccountType(account.accountType)}
-          key={i++}
-        >
+        <div className='flip-box'>
+          <div className='flip-box-inner'>
+            <Card className='flip-box-front' style={
+              account.accountType === 'Текущий счет' ? 
+                currentAccount :
+                depositAccount
+              }
+              onClick={() => setAccountType(account.accountType)}
+              key={i++}
+            >
 
-          <Section1>
-            <div className='golden__thing'></div>
-            <Balance>
-              <div>
-                {account.accountType}
-              </div>
-              {formatBalance(account.balance)} {account.currencyType}
-            </Balance>
-          </Section1>
+              <Section1>
+                <div className='golden__thing'></div>
+                <Balance>
+                  <div>
+                    {account.accountType}
+                  </div>
+                  {formatBalance(account.balance)} {account.currencyType}
+                </Balance>
+              </Section1>
 
-          <Section2>
-           {account.accountType === 'Текущий счет' ?
-            <CardNumberWrapper>
-              {invisibleCardNumber} {lastDigits.slice(12, 16)}
-            </CardNumberWrapper>
-           :null}
-          </Section2>
+              <Section2>
+              {account.accountType === 'Текущий счет' ?
+                <CardNumberWrapper>
+                  {invisibleCardNumber} {lastDigits.slice(12, 16)}
+                </CardNumberWrapper>
+              :null}
+              </Section2>
 
-          <Section3>
-              {account.ownerName.toUpperCase()}
-          </Section3>
+              <Section3>
+                  {account.ownerName.toUpperCase()}
+              </Section3>
 
-        </Card>  
+            </Card>
+            <div className='flip-box-back' onClick={() => setAccountType(account.accountType)}>
+                <div>
+                  <span>IBAN: {account.accountNumber}</span>
+                </div>
+                <div>
+                  <span>Счет: {account.accountType}</span>
+                </div>
+                <div>
+                  <span>Дата открытия: {account.activatedDate.slice(0,10)}</span>
+                </div>
+                <div>
+                  <span>Клиент: {account.ownerName}</span>
+                </div>
+                <div>
+                  <span>ИИН: {account.ownerIIN}</span>
+                </div>
+                <div>
+                  <span>Активен: {account.isActive ? 'Да' : 'Нет'}</span>
+                </div>
+                <div>
+                  <span>Заблокирован: {account.isBlocked ? 'Да' : 'Нет'}</span>
+                </div>
+            </div>
+          </div>
+        </div>  
       )}
-      {accounts.length === 2 ? null :
+      {accounts.length === 1 ? null :
       <AddCard onClick={openNewAccount}>
         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-plus-circle" viewBox="0 0 16 16">
         <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"/>
@@ -251,6 +299,14 @@ const AddAccountForm = styled.div`
   .hide{
     display:none;
   }
+  .download__link{
+    text-decoration:underline;
+    color:#4d4d4d;
+    :hover{
+      color:purple;
+      cursor:pointer;
+    }
+  }
   div{
     padding-left:10px;
     padding-top:5px;
@@ -282,7 +338,7 @@ const Card = styled.div`
   margin-right:30px;
   height:200px;
   border-radius:5px;
-  opacity:0.7;
+  opacity:0.8;
   margin-top:30px;
   -webkit-box-shadow: 0px 5px 12px -1px rgba(34, 60, 80, 0.6);
   -moz-box-shadow: 0px 5px 12px -1px rgba(34, 60, 80, 0.6);

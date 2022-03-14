@@ -29,7 +29,7 @@ const Dashboard:FC<DashboardProps> = ({setLogout}) => {
         <Body>
             <MyCards setAccountType={setAccountType} setAccountNames={setAccountNames} setAccountStatus={setAccountStatus}/>
             <Wrapper>
-                <OverviewHeader />
+                <OverviewHeader/>
                 <Overview accountType={accountType} accountNames={accountNames} operations={operations} accountStatus={accountStatus}/>
                 <Transactions setBankOperations={setOperations}/>
             </Wrapper>
