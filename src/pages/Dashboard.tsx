@@ -8,6 +8,7 @@ import MyCards from '../components/MyCards'
 import Overview from '../components/Overview'
 import OverviewHeader from '../components/OverviewHeader'
 import Transactions from '../components/Transactions'
+import TransferHistory from '../components/TransferHistory'
 import Account from '../models/Account'
 import BankOperation from '../models/BankOperation'
 import Notification from '../models/Notification'
@@ -32,6 +33,7 @@ const Dashboard:FC<DashboardProps> = ({setLogout}) => {
         <Body>
             {menuItem === 'card' ? <MyCards setUserName={setUserName} setAccountType={setAccountType} setAccountNames={setAccountNames} setAccountStatus={setAccountStatus}/> : null}
             {menuItem === 'folder' ? <DocumentViewer/> : null}
+            {menuItem === 'file' ? <TransferHistory operations={operations}/> : null}
             <Wrapper>
                 <OverviewHeader/>
                 <Overview accountType={accountType} accountNames={accountNames} operations={operations} accountStatus={accountStatus}/>

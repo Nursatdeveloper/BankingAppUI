@@ -49,15 +49,16 @@ const Transactions:FC<TransactionsProps> = ({setBankOperations, accountType, use
   function getBankOperations(operations:BankOperation[]){
     var array:BankOperation[] = [];
     operations.map(o => {
-      if(o.fromAccount === accountType && o.bankOperationMaker === userName && o.bankOperationType === 'Перевод'){
-        array.push(o)
-      }
       if(o.bankOperationType === 'Пополнение' && o.bankOperationMaker != userName && o.toAccount === accountType){
         array.push(o)
       }
       if(o.bankOperationType === 'Пополнение' && o.bankOperationMaker === userName && o.toAccount === accountType){
         array.push(o)
       }
+      if(o.fromAccount === accountType && o.bankOperationMaker === userName && o.bankOperationType === 'Перевод'){
+        array.push(o)
+      }
+
     })
     console.log(array)
     return array
