@@ -1,0 +1,94 @@
+body{
+    font-family: 'Times New Roman', Times, serif;
+}
+div{
+    font-size:14px;
+}
+.logo{
+    width:170px;
+    height:150px;
+}
+
+.logo__wrapper{
+    text-align: center;
+}
+.header{
+    font-weight:600;
+    text-align: center;
+    font-size: 20px;;
+}
+.sub__header{
+    font-weight:600;
+    text-align: center;
+}
+
+.start{
+    margin-left:30px;
+}
+
+.paragraph{
+    margin-top:20px;
+}
+
+.bold{
+    font-weight:600;
+}
+
+.col-2{
+    display: flex;
+}
+
+.width-50{
+    width:50%;
+}
+
+.mg-b-10{
+    margin-bottom:10px;
+}
+
+.border{
+    width:80%;
+    margin-right:auto;
+    margin-left:auto;
+    margin-top:10px;
+}
+.invoice{
+    display:flex;
+    padding-left:20px;
+    padding-right:20px;
+}
+.border-bottom{
+    border-bottom:1px solid #e3e3e3;
+    position: relative;
+    display:flex;
+    padding:15px;
+    color:#4d4d4d;
+}
+.status{
+    height:50px;
+    background-color: #00e600;
+    opacity: 0.8;
+    color:white;
+    font-weight: 600;
+    padding-top:10px;
+    padding-left:20px;
+}
+
+.fs-16{
+    font-size:16px;
+}
+.fs-20{
+    font-size:20px;
+}
+.fs-24{
+    font-size: 24px;
+}
+
+.w-70{
+    width:70%;
+    font-size:16px;
+}
+.w-30{
+    width:30%;
+    font-size:16px;
+}

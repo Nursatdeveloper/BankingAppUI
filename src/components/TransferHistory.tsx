@@ -1,5 +1,6 @@
 import React, { FC, useEffect, useState } from 'react'
 import styled from 'styled-components'
+import API_URL from '../api_url';
 import BankOperation from '../models/BankOperation'
 
 interface TransferHistryProps{
@@ -20,7 +21,24 @@ const TransferHistory:FC<TransferHistryProps> = ({operations}) => {
     }, [operations])
 
     function handleDownload(id:number){
-        
+        const token = sessionStorage.getItem('token');
+        const url = `${API_URL}/document/get-transfer-invoice/${id}`;
+        fetch(url, {
+            method:"GET",
+            headers:{
+                'Accept':'application/pdf',
+                'Authorization':`${token}`
+            }
+        }).then(response => response.blob())
+        .then(blob => {
+            const url = window.URL.createObjectURL(new Blob([blob]));
+            const link = document.createElement('a');
+            link.href=url;
+            link.setAttribute('download', 'Квитанция.pdf');
+            document.body.appendChild(link);
+            link.click();
+            link.parentNode?.removeChild(link);
+        }).catch(error => console.log(error));
     }
 
   return (
@@ -47,7 +65,7 @@ const TransferHistory:FC<TransferHistryProps> = ({operations}) => {
                     </div>
                     <div className='transfer__money'>
                         <div>-{transfer.bankOperationMoneyAmount} {transfer.currencyType}</div>
-                        <div className='download__link' onClick={()=> handleDownload(transfer.bankOperationId)}>Скачать чек</div>
+                        <div className='download__link' onClick={()=> handleDownload(transfer.bankOperationId)}>Скачать квитанцию</div>
                     </div>
                 </div>
             ).reverse()}
@@ -113,7 +131,7 @@ const TransferHistoryBody = styled.div`
     }
     .transfer__money{
         position:absolute;
-        right:10px;
+        right:20px;
         font-size:14px;
         color:#e65c4d;
     }
