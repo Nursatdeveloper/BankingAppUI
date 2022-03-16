@@ -41,10 +41,10 @@ const Overview:FC<OverviewProps> = ({accountType, accountNames, operations, acco
     var check2 = 1; 
     for(let i = operations.length-1; i >= 0; i--){
       if(operations[i].bankOperationType === 'Пополнение' && check === 1){
-        transactions.push(operations[i].bankOperationTime.slice(0, 10))
+        transactions[0] = operations[i].bankOperationTime.slice(0, 10)
         check = 0;
       }else if(operations[i].bankOperationType === 'Перевод' && check2 === 1){
-        transactions.push(operations[i].bankOperationTime.slice(0, 10))
+        transactions[1] = operations[i].bankOperationTime.slice(0, 10)
         check2 = 0;
       }
       if(check+check2 === 0){

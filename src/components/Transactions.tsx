@@ -4,10 +4,12 @@ import API_URL from '../api_url';
 import BankOperation from '../models/BankOperation'
 
 interface TransactionsProps {
-  setBankOperations:(operations: BankOperation[]) => void
+  setBankOperations:(operations: BankOperation[]) => void,
+  accountType:string,
+  userName:string
 }
 
-const Transactions:FC<TransactionsProps> = ({setBankOperations}) => {
+const Transactions:FC<TransactionsProps> = ({setBankOperations, accountType, userName}) => {
   const [fromDate, setFromDate] = useState<string>('');
   const [toDate, setToDate] = useState<string>('');
   const [operations, setOperations] = useState<BankOperation[]>([]);
@@ -26,11 +28,15 @@ const Transactions:FC<TransactionsProps> = ({setBankOperations}) => {
       },
     }).then (function (response) {return response.json()})
       .then(function (json) {
-        setOperations(json);
+        const bankOperations = getBankOperations(json);
+        setOperations(bankOperations);
         setBankOperations(json)
+
+
+
       })
-      .catch(function (error) {console.log(error)}), 1500)
-  },[])
+      .catch(function (error) {console.log(error)}), 500)
+  },[accountType])
 
   function handleDateChange(toDate:string){
     var newOperations:BankOperation[] = []
@@ -40,6 +46,23 @@ const Transactions:FC<TransactionsProps> = ({setBankOperations}) => {
       }
     }
     setOperations(newOperations)
+  }
+
+  function getBankOperations(operations:BankOperation[]){
+    var array:BankOperation[] = [];
+    operations.map(o => {
+      if(o.fromAccount === accountType && o.bankOperationMaker === userName && o.bankOperationType === 'Перевод'){
+        array.push(o)
+      }
+      if(o.bankOperationType === 'Пополнение' && o.bankOperationMaker != userName && o.toAccount === accountType){
+        array.push(o)
+      }
+      if(o.bankOperationType === 'Пополнение' && o.bankOperationMaker === userName && o.toAccount === accountType){
+        array.push(o)
+      }
+    })
+    console.log(array)
+    return array
   }
 
   return (

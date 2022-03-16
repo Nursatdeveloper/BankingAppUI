@@ -61,6 +61,7 @@ const Login:FC<LoginProps> = ({setLoggedIn}) => {
             <button className='login__btn' onClick={submitForm}>Login</button>
         </div>
         87476959046
+        <div>87071958146 talgat</div>
     </div>
   )
 }

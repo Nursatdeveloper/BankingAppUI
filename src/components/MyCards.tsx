@@ -8,10 +8,11 @@ import Account from '../models/Account';
 interface MyCardsProps{
   setAccountType:(account:string) => void,
   setAccountNames:(accountNames:string[]) => void,
-  setAccountStatus:(status:boolean) => void
+  setAccountStatus:(status:boolean) => void,
+  setUserName:(name:string) => void
 }
 
-const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames, setAccountStatus}) => {
+const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames, setAccountStatus, setUserName}) => {
   const [lastDigits, setLastDigits] = useState<string>('')
   const [id, setId] = useState<string>('');
   const [token, setToken] = useState<string>('');
@@ -43,6 +44,7 @@ const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames, setAccountSt
           setAccountType(json.accounts[0].accountType)
           setAccountNames(json.accounts[0].accountType)
           setAccountStatus(json.accounts[0].isActive)
+          setUserName(json.accounts[0].ownerName)
           if(json.accounts[0].accountType === 'Депозит'){
             setDeposit(true);
           }else{
@@ -50,6 +52,7 @@ const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames, setAccountSt
           }
         }else if(json.accounts.length == 2){
           setAccountType('Текущий счет')
+          setUserName(json.accounts[0].ownerName)
           setAccountNames([json.accounts[0].accountType, json.accounts[1].accountType])
           json.accounts.map((a:Account) => a.accountType === 'Текущий счет' ? setAccountStatus(a.isActive) : null)
         }
@@ -273,7 +276,7 @@ const AddAccountForm = styled.div`
   margin-right:30px;
   padding:5px;
   background-color:#e6e6e6;
-  height:165px;
+  height:168px;
   .accountType{
     border:1px solid #e3e3e3;
     color:#666;
@@ -325,7 +328,7 @@ const AddAccountForm = styled.div`
       color:white;
       padding-left:15px;
       padding-right:15px;
-      margin-top:2px;
+      margin-top:0px;
       border:0;
       padding-top:4px;
       padding-bottom:4px;

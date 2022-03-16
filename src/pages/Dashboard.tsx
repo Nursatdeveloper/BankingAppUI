@@ -2,6 +2,7 @@ import axios from 'axios'
 import React, { FC, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import API_URL from '../api_url'
+import DocumentViewer from '../components/DocumentViewer'
 import Menu from '../components/Menu'
 import MyCards from '../components/MyCards'
 import Overview from '../components/Overview'
@@ -20,18 +21,21 @@ const Dashboard:FC<DashboardProps> = ({setLogout}) => {
     const [accountNames, setAccountNames] = useState<string[]>([]);
     const [operations, setOperations] = useState<BankOperation[]>([]);
     const [accountStatus, setAccountStatus] = useState<boolean>(false);
+    const [menuItem, setMenuItem] = useState<string>('');
+    const [userName, setUserName] = useState<string>('');
 
   return (
     <Container>
 
-        <Menu setLogout={setLogout}/>
+        <Menu setLogout={setLogout} setMenuItem={setMenuItem}/>
 
         <Body>
-            <MyCards setAccountType={setAccountType} setAccountNames={setAccountNames} setAccountStatus={setAccountStatus}/>
+            {menuItem === 'card' ? <MyCards setUserName={setUserName} setAccountType={setAccountType} setAccountNames={setAccountNames} setAccountStatus={setAccountStatus}/> : null}
+            {menuItem === 'folder' ? <DocumentViewer/> : null}
             <Wrapper>
                 <OverviewHeader/>
                 <Overview accountType={accountType} accountNames={accountNames} operations={operations} accountStatus={accountStatus}/>
-                <Transactions setBankOperations={setOperations}/>
+                <Transactions setBankOperations={setOperations} accountType={accountType} userName={userName}/>
             </Wrapper>
         </Body>
 

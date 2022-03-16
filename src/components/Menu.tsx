@@ -1,20 +1,25 @@
-import React, { FC, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
 import styled from 'styled-components'
 import '../App.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { useNavigate } from 'react-router-dom'
 
 interface MenuProps{
-    setLogout:(logout:boolean) => void
+    setLogout:(logout:boolean) => void,
+    setMenuItem:(item:string) => void
 }
 
-const Menu:FC<MenuProps> = ({setLogout}) => {
+const Menu:FC<MenuProps> = ({setLogout, setMenuItem}) => {
     let navigate = useNavigate();
     const redirect = (url:string) =>{
         navigate(url);
     }
 
     const [icon, setIcon] = useState<string>('card');
+    useEffect(()=>{
+        setMenuItem(icon)
+    }, [icon])
+
 
     const selectedIcon = {
         color: '#000058',

@@ -18,53 +18,65 @@ const CardDetails: FC<CardDetailsProps> = ({lastTransactions, operations}) => {
   const [revenue, setRevenue] = useState<number>(0);
   const [expense, setExpense] = useState<number>(0);
   const [graphArray, setGraphArray] = useState<GraphColoumn[]>([]);
+  const [bankOperations, setBankOperations] = useState<BankOperation[]>([]);
   useEffect(() => {
     console.log(lastTransactions)
+    setBankOperations(operations)
     calculateRevenue()
     generateGraph()
   }, [operations])
 
   function generateGraph(){
-    var array = []
-    var get = 0;
-    var spend = 0;
-    var today = new Date();
-    var date = dateToString(today)
-    var count = 0;
-    var dates:string[] = []
-    operations.map(function(operation){
+    var array:GraphColoumn[] = []
+    console.log(operations)
+    var dates:string[] = [];
+    operations.map(operation => {
       if(!dates.includes(operation.bankOperationTime.slice(5, 10))){
-        dates.push(operation.bankOperationTime.slice(5, 10))
+        dates.push(operation.bankOperationTime.slice(5, 10));
       }
     })
-    if(dates.length > 7){
-      dates = dates.slice(dates.length-8, dates.length-1)
-    }
-    for(let i = 0; i < operations.length; i++){
-      if(operations[i].bankOperationTime.slice(5,10) === dates[count]){
-        if(operations[i].bankOperationType === 'Пополнение'){
-          get += operations[i].bankOperationMoneyAmount;
-        }else{
-          spend += operations[i].bankOperationMoneyAmount;
-        }
-      }else{
-        const max = get + spend;
-        const revenue = Math.round(get/max*100)
-        const expense = Math.round(spend/max*100)
-        const obj:GraphColoumn = {
-          date: dates[count],
-          revenue: revenue,
-          expense: expense
-        }
-        array.push(obj);
-        count++;
-        get = 0;
-        spend = 0;
-      }
-    }
-    console.log(array)
-    setGraphArray(array)
     
+    if(dates.length > 7){
+      dates.slice(0, 7);
+    }
+    console.log(dates);
+    for(let i = 0; i < dates.length; i++){
+      var get = 0;
+      var spend = 0;
+      var replenishes = operations.filter(o => {
+        if(o.bankOperationTime.slice(5, 10) === dates[i]){
+          if(o.bankOperationType === 'Пополнение'){
+            return o.bankOperationMoneyAmount;
+          }
+        }
+      })
+      replenishes.map(r => get += r.bankOperationMoneyAmount)
+
+      var transfers = operations.filter(o => {
+        if(o.bankOperationTime.slice(5, 10) === dates[i]){
+          if(o.bankOperationType === 'Перевод'){
+            return o.bankOperationMoneyAmount;
+          }
+        }
+      })
+
+      transfers.map(e => spend += e.bankOperationMoneyAmount);
+
+      const max = get+spend;
+
+      const column:GraphColoumn = {
+        date: dates[i],
+        revenue: Math.round((get/max)*100),
+        expense: Math.round((spend/max)*100)
+      }
+
+      array.push(column)
+      
+    }
+    if(array.length > 7){
+      array = array.slice(array.length-7, array.length)
+    }
+    setGraphArray(array);
   }
 
   function calculateRevenue(){
