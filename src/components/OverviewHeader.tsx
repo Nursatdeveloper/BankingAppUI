@@ -80,22 +80,24 @@ const OverviewHeader:FC<OverviewHeaderProps> = () => {
   return (
     <OverviewHeaderWrapper>
 
-        <NotificationButton onClick={showNotificationViewer}>        
-            <div className={newNotifications > 0 ? 'bounce' : ''}>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-bell-fill" viewBox="0 0 16 16">
-                <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
-                </svg>
-            </div>
-            {newNotifications > 0 ? <div className='notification_number'>{newNotifications}</div> : null}
-        </NotificationButton>
+        <HeaderItem>
+          <NotificationButton onClick={showNotificationViewer}>        
+              <div className={newNotifications > 0 ? 'bounce' : ''}>
+                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-bell-fill" viewBox="0 0 16 16">
+                  <path d="M8 16a2 2 0 0 0 2-2H6a2 2 0 0 0 2 2zm.995-14.901a1 1 0 1 0-1.99 0A5.002 5.002 0 0 0 3 6c0 1.098-.5 6-2 7h14c-1.5-1-2-5.902-2-7 0-2.42-1.72-4.44-4.005-4.901z"/>
+                  </svg>
+              </div>
+              {newNotifications > 0 ? <div className='notification_number'>{newNotifications}</div> : null}
+          </NotificationButton>
 
-        <Profile>
-            <div></div>
-            {userName}
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-chevron-down" viewBox="0 0 16 16">
-            <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
-            </svg>
-        </Profile>
+          <Profile>
+              <div className='photo__container'></div>
+              <div className='name__container'>{userName}</div>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-chevron-down" viewBox="0 0 16 16">
+              <path fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/>
+              </svg>
+          </Profile>
+        </HeaderItem>
 
         <NotificationViewer className={showNotification ? 'showNotificationViewer' : 'hideNotificationViewer'}>
             {notifications.map((notification, i) => 
@@ -124,12 +126,17 @@ const OverviewHeaderWrapper = styled.div`
     z-index:3;
 `
 
+const HeaderItem = styled.div`
+  display:flex;
+  position:absolute;
+  right:10px;
+  width:300px;
+`
+
 const NotificationButton = styled.div`
     display:flex;
     width:41px;
     padding-left:20px;
-    position:absolute;
-    right:230px;
     border-left:2px solid #f2f2f2;
     border-right:2px solid #f2f2f2;
     padding-top:15px;
@@ -212,15 +219,19 @@ const NotificationButton = styled.div`
 const Profile = styled.div`
     display:flex;
     font-size:16px;
-    position:absolute;
-    right:40px;
     padding-top:15px;
-    div{
+    margin-left:20px;
+    .photo__container{
         border-radius:50%;
-        width:30px;
-        height:30px;
+        width:35px;
+        height:35px;
         border:1px solid #e3e3e3;
         margin-right:10px;
+    }
+    .name__container{
+      width:145px;
+      font-size:14px;
+      padding-top:5px;
     }
     svg{
         color:#a6a6a6;
@@ -230,7 +241,7 @@ const Profile = styled.div`
 `
 
 const NotificationViewer = styled.div`
-    width:292px;
+    width:310px;
     position:absolute;
     right:0;
     z-index:2;

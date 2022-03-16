@@ -30,9 +30,7 @@ const Transactions:FC<TransactionsProps> = ({setBankOperations, accountType, use
       .then(function (json) {
         const bankOperations = getBankOperations(json);
         setOperations(bankOperations);
-        setBankOperations(json)
-
-
+        setBankOperations(bankOperations)
 
       })
       .catch(function (error) {console.log(error)}), 500)
@@ -84,6 +82,7 @@ const Transactions:FC<TransactionsProps> = ({setBankOperations, accountType, use
           <div className='amount'>Сумма</div>
           <div className='currency'>Валюта</div>
         </TransactionColumns>
+        {operations.length === 0 ? <div className='no_transactions'>Пока нет транзакций!</div> : null}
         <TransactionList>
         {operations.map(operation => 
           <TransactionColumns key={operation.bankOperationId}>
@@ -169,6 +168,11 @@ const TransactionBody = styled.div`
  right:0;
  left:0;
  bottom:0;
+ .no_transactions{
+  text-align:center;
+  font-size:14px;
+  margin-top:20px;
+}
 `
 const TransactionColumns = styled.div`
   height:35px;
@@ -203,6 +207,7 @@ const TransactionColumns = styled.div`
   .small__font{
     font-size:11px;
   }
+
 `
 
 const TransactionList =styled.div`

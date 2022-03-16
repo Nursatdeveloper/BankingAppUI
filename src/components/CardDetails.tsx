@@ -20,11 +20,9 @@ const CardDetails: FC<CardDetailsProps> = ({lastTransactions, operations}) => {
   const [graphArray, setGraphArray] = useState<GraphColoumn[]>([]);
   const [bankOperations, setBankOperations] = useState<BankOperation[]>([]);
   useEffect(() => {
-    console.log(lastTransactions)
-    setBankOperations(operations)
     calculateRevenue()
     generateGraph()
-  }, [operations])
+  }, [operations, timePeriod])
 
   function generateGraph(){
     var array:GraphColoumn[] = []
