@@ -1,11 +1,9 @@
 import React, { FC, useState } from 'react'
-import "./Login.css"
 import axios from 'axios'
 import API_URL from '../api_url';
 import { useNavigate } from 'react-router-dom';
-import User from '../models/User';
-import Account from '../models/Account';
-import Notification from '../models/Notification'
+import styled from 'styled-components';
+
 
 interface LoginProps{
     setLoggedIn:(logged:boolean) => void,
@@ -45,25 +43,14 @@ const Login:FC<LoginProps> = ({setLoggedIn}) => {
     }
 
   return (
-    <div className='login__form'>
-        <div className='login__header'>
-            Login
-        </div>
-        <div className='login__row'>
-            <label>Telephone:</label>
-            <input className='login__input' type='text' value={telephone} onChange={(e) => setTelephone(e.target.value)}/>
-        </div>
-        <div className='login__row'>
-            <label>Password:</label>
-            <input className='login__input' type='password' value={password} onChange={(e) => setPassword(e.target.value)}/>
-        </div>
-        <div className='login__row'>
-            <button className='login__btn' onClick={submitForm}>Login</button>
-        </div>
-        87476959046
-        <div>87071958146 talgat</div>
-    </div>
+    <LoginWrapper>
+
+    </LoginWrapper>
   )
 }
 
 export default Login
+
+const LoginWrapper = styled.div`
+
+`
