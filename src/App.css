@@ -78,7 +78,7 @@
     transform-style: preserve-3d;
   }
   
-  .flip-box:hover .flip-box-inner {
+  .flip-box .flip-box-inner {
     transform: rotateY(180deg);
   }
   
@@ -110,4 +110,14 @@
   }
 .flip-box-back div{
     padding-bottom:5px;
+}
+
+
+.return__back{
+    margin-left:70px;
+}
+
+.return__back:hover{
+    text-decoration: underline;
+    cursor:pointer;
 }

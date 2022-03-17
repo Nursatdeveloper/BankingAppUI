@@ -18,7 +18,7 @@ const CardDetails: FC<CardDetailsProps> = ({lastTransactions, operations}) => {
   const [revenue, setRevenue] = useState<number>(0);
   const [expense, setExpense] = useState<number>(0);
   const [graphArray, setGraphArray] = useState<GraphColoumn[]>([]);
-  const [bankOperations, setBankOperations] = useState<BankOperation[]>([]);
+
   useEffect(() => {
     calculateRevenue()
     generateGraph()
@@ -26,7 +26,6 @@ const CardDetails: FC<CardDetailsProps> = ({lastTransactions, operations}) => {
 
   function generateGraph(){
     var array:GraphColoumn[] = []
-    console.log(operations)
     var dates:string[] = [];
     operations.map(operation => {
       if(!dates.includes(operation.bankOperationTime.slice(5, 10))){
@@ -37,7 +36,6 @@ const CardDetails: FC<CardDetailsProps> = ({lastTransactions, operations}) => {
     if(dates.length > 7){
       dates.slice(0, 7);
     }
-    console.log(dates);
     for(let i = 0; i < dates.length; i++){
       var get = 0;
       var spend = 0;
@@ -105,7 +103,7 @@ const CardDetails: FC<CardDetailsProps> = ({lastTransactions, operations}) => {
   function calculateSumBetween(from:string, type:string){
     var amount = 0;
     for(let i = operations.length-1; i >= 0; i-- ){
-      if(operations[i].bankOperationTime.slice(0, 10) !== from){
+      if(operations[i].bankOperationTime.slice(0, 10) >= from){
         if(operations[i].bankOperationType === type){
           amount += operations[i].bankOperationMoneyAmount;
         }

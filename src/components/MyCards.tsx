@@ -22,6 +22,7 @@ const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames, setAccountSt
   const [agreementCheckbox, setAgreementCheckbox] = useState<boolean>(false);
   const [current, setCurrent] = useState<boolean>(false);
   const [deposit, setDeposit] = useState<boolean>(false);
+  const [viewBack, setViewBack] = useState<string>('');
   const invisibleCardNumber = "****   ****   ****";
 
   useEffect(()=> {
@@ -57,7 +58,7 @@ const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames, setAccountSt
           json.accounts.map((a:Account) => a.accountType === 'Текущий счет' ? setAccountStatus(a.isActive) : null)
         }
       })
-      .catch(function (error) {console.log(error)});
+      .catch(function (error) {console.log(error)})
 
   },[])
 
@@ -126,6 +127,17 @@ const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames, setAccountSt
     }).catch(error =>  console.log(error))
   }
 
+  function viewBackHandler(account:string){
+    if(account === 'close'){
+      setViewBack('')
+    }
+    else if(account === 'Текущий счет'){
+      setViewBack('Текущий счет');
+    }else{
+      setViewBack('Депозит')
+    }
+  }
+
   const currentAccount = {
     backgroundColor: '#DAA520',
     color:'#4d4d4d',
@@ -174,14 +186,14 @@ const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames, setAccountSt
       </AddAccountForm>
 
       {accounts.map((account, i) => 
-        <div className='flip-box'>
+        <div className={account.accountType === viewBack ? 'flip-box' : ''}>
           <div className='flip-box-inner'>
             <Card className='flip-box-front' style={
               account.accountType === 'Текущий счет' ? 
                 currentAccount :
                 depositAccount
               }
-              onClick={() => setAccountType(account.accountType)}
+
               key={i++}
             >
 
@@ -192,6 +204,12 @@ const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames, setAccountSt
                     {account.accountType}
                   </div>
                   {formatBalance(account.balance)} {account.currencyType}
+                  <div className='view__back' onClick={()=>viewBackHandler(account.accountType)}>
+                    Посметреть реквезиты
+                  </div>
+                  <div className='choose__account' onClick={() => setAccountType(account.accountType)}>
+                    Выбрать счет
+                  </div>
                 </Balance>
               </Section1>
 
@@ -208,7 +226,7 @@ const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames, setAccountSt
               </Section3>
 
             </Card>
-            <div className='flip-box-back' onClick={() => setAccountType(account.accountType)}>
+            <div className='flip-box-back' >
                 <div>
                   <span>IBAN: {account.accountNumber}</span>
                 </div>
@@ -229,6 +247,7 @@ const MyCards:FC<MyCardsProps> = ({setAccountType, setAccountNames, setAccountSt
                 </div>
                 <div>
                   <span>Заблокирован: {account.isBlocked ? 'Да' : 'Нет'}</span>
+                  <span className='return__back' onClick={()=> viewBackHandler('close')}>Вернуться назад</span>
                 </div>
             </div>
           </div>
@@ -372,6 +391,23 @@ const Balance = styled.div`
   right:20px;
   div{
     font-size:14px;
+  }
+  .view__back{
+    font-size:12px;
+    margin-top:10px;
+    :hover{
+      text-decoration:underline;
+      cursor:pointer;
+    }
+  }
+  .choose__account{
+    font-size:12px;
+    margin-left:50px;
+    margin-top:8px;
+    :hover{
+      text-decoration:underline;
+      cursor:pointer;
+    }
   }
 `
 

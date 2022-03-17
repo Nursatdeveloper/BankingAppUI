@@ -28,13 +28,12 @@ const Transactions:FC<TransactionsProps> = ({setBankOperations, accountType, use
       },
     }).then (function (response) {return response.json()})
       .then(function (json) {
-        const bankOperations = getBankOperations(json);
+        const bankOperations = getBankOperations(json)
         setOperations(bankOperations);
         setBankOperations(bankOperations)
-
       })
       .catch(function (error) {console.log(error)}), 500)
-  },[accountType])
+  },[accountType, userName])
 
   function handleDateChange(toDate:string){
     var newOperations:BankOperation[] = []
@@ -47,20 +46,16 @@ const Transactions:FC<TransactionsProps> = ({setBankOperations, accountType, use
   }
 
   function getBankOperations(operations:BankOperation[]){
+
     var array:BankOperation[] = [];
     operations.map(o => {
-      if(o.bankOperationType === 'Пополнение' && o.bankOperationMaker != userName && o.toAccount === accountType){
+      if(o.bankOperationType === 'Пополнение' &&  o.toAccount === accountType){
         array.push(o)
       }
-      if(o.bankOperationType === 'Пополнение' && o.bankOperationMaker === userName && o.toAccount === accountType){
+      else if(o.fromAccount === accountType && o.bankOperationMaker === userName && o.bankOperationType === 'Перевод'){
         array.push(o)
       }
-      if(o.fromAccount === accountType && o.bankOperationMaker === userName && o.bankOperationType === 'Перевод'){
-        array.push(o)
-      }
-
     })
-    console.log(array)
     return array
   }
 
