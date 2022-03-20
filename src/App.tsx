@@ -7,6 +7,7 @@ import User from './models/User';
 import Account from './models/Account';
 import Notification from './models/Notification';
 import Dashboard from './pages/Dashboard';
+import AdminProfile from './pages/AdminProfile';
 
 
 
@@ -23,6 +24,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           {/*Production: <Route path="/dashboard" element={loggedIn ? <Dashboard /> : <Login setLoggedIn={setLoggedIn}/>}/>*/}
           <Route path="/dashboard" element={<Dashboard setLogout={setLoggedIn} />} />
+          <Route path="/admin" element={<AdminProfile />} />
         </Routes>
       </Router>
     </div>
