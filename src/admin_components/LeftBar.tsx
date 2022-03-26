@@ -16,7 +16,7 @@ const LeftBar:FC<LeftBarProps> = ({setCurrentPage}) => {
             <LeftBarItem onClick={() => setCurrentPage('bank')}>
                 Nursat Bank
             </LeftBarItem>
-            <LeftBarItem onClick={() => setCurrentPage('users')} >
+            <LeftBarItem onClick={() => setCurrentPage('userList')} >
                 Пользователи
             </LeftBarItem>
             <LeftBarItem onClick={() => setCurrentPage('current')}>
@@ -69,5 +69,7 @@ const LeftBarItem = styled.div`
     color:#666;
     :hover{
         background-color:#f2f2f2;
+        cursor:pointer;
+        font-weight:600;
     }
 `

@@ -4,7 +4,7 @@ interface User{
     firstName:string,
     lastName:string,
     iin:string,
-    birthdate:string,
+    birthDate:string,
     gender:string,
     cardNumber:string,
     phoneNumber:string,

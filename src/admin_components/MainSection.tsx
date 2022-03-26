@@ -1,8 +1,13 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import styled from 'styled-components'
 import CreateEmployeeForm from './CreateEmployeeForm'
 
 const MainSection = () => {
+
+    useEffect(() => {
+        
+    })
+
   return (
     <MainSectionWrapper>
         <GeneralInfo>
@@ -29,7 +34,21 @@ const MainSection = () => {
             </Information>
         </GeneralInfo>
 
-        <CreateEmployeeForm />
+        <div className='wrapper'>
+            <CreateEmployeeForm />
+            <div className='gender__proportion'>
+                <span>Мужчины</span>
+                <div className='gender__percentage'>
+                    50%
+                </div>
+            </div>
+            <div className='gender__proportion'>
+                <span>Женщины</span>
+                <div className='gender__percentage'>
+                    45%
+                </div>
+            </div>
+        </div>
 
     </MainSectionWrapper>
   )
@@ -46,6 +65,28 @@ const  MainSectionWrapper = styled.div`
     right:4%;
     background-color:#f2f2f2;
     border-radius:10px;
+    .wrapper{
+        display:flex;
+        justify-content:space-between;
+    }
+    .gender__proportion{
+        background-color:white;
+        border:1px solid #e3e3e3;
+        border-radius:5px;
+        width:25%;
+        text-align:center;
+        height:fit-content;
+        padding:20px;
+        margin-top:20px;
+        margin-right:20px;
+        span{
+            font-size:14px;
+        }
+    }
+    .gender__percentage{
+        font-size:30px;
+        color:#4d4d4d;
+    }
 `
 
 const GeneralInfo = styled.div`

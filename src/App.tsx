@@ -13,7 +13,12 @@ import AdminProfile from './pages/AdminProfile';
 
 function App() {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [isAdmin, setIsAdmin] = useState<boolean>(false);
   useEffect(()=>{
+    const value = sessionStorage.getItem('isAdmin');
+    if(value === 'true'){
+      setIsAdmin(true);
+    }
   },)
   return (
     <div className="App">
@@ -24,7 +29,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           {/*Production: <Route path="/dashboard" element={loggedIn ? <Dashboard /> : <Login setLoggedIn={setLoggedIn}/>}/>*/}
           <Route path="/dashboard" element={<Dashboard setLogout={setLoggedIn} />} />
-          <Route path="/admin" element={<AdminProfile />} />
+          <Route path="/admin" element={isAdmin ? <AdminProfile /> : <div>Вы не администратор</div>} />
         </Routes>
       </Router>
     </div>

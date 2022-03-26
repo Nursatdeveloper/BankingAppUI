@@ -27,12 +27,16 @@ const Login:FC<LoginProps> = ({setLoggedIn}) => {
         }
         axios.post(API_URL+'/user/login', loginUserCommand)
         .then(response => {
-            console.log(response.data)
             if(response.data.isSuccess){
                 setLoggedIn(true);
                 sessionStorage.setItem('id', response.data.userId)
                 sessionStorage.setItem('token', `Bearer ${response.data.message}`)
-                redirect("/dashboard");
+                if(response.data.role === 'Пользователь'){
+                    redirect("/dashboard");
+                } else {
+                    sessionStorage.setItem('isAdmin', 'true');
+                    redirect("/admin");
+                }
             }
             else{
                 alert(JSON.stringify(response.data));

@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import Header from '../admin_components/Header'
 import LeftBar from '../admin_components/LeftBar'
 import MainSection from '../admin_components/MainSection'
+import UserList from '../admin_components/UserList'
 
 const AdminProfile = () => {
     const [currentPage, setCurrentPage] = useState<string>('bank')
@@ -13,7 +14,8 @@ const AdminProfile = () => {
         <LeftBar setCurrentPage={setCurrentPage}/>
         <MainSectionWrapper>
             <Header />
-            <MainSection />
+            {currentPage === 'bank' ? <MainSection /> : null}
+            {currentPage === 'userList' ? <UserList /> : null}
         </MainSectionWrapper>
     </AdminProfileWrapper>
   )
