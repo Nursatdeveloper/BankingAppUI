@@ -109,6 +109,7 @@ const CreateEmployeeWrapper = styled.div`
     width:400px;
     height:350px;
     background-color:white;
+    border:1px solid #e3e3e3;
     margin-left:20px;
     margin-top:20px;
     border-radius:5px;

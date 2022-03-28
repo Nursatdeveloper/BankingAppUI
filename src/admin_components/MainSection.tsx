@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import API_URL from '../api_url'
 import CreateEmployeeForm from './CreateEmployeeForm'
+import SendNotificationForm from './SendNotificationForm'
 
 const MainSection = () => {
     const [customerNumber, setCustomerNumber] = useState<number>(0);
@@ -83,7 +84,10 @@ const MainSection = () => {
         </GeneralInfo>
 
         <div className='wrapper'>
-            <CreateEmployeeForm />
+            <div>
+                <CreateEmployeeForm />
+                <SendNotificationForm />
+            </div>
             <div className='gender__proportion'>
                 <span>Мужчины</span>
                 <div className='gender__percentage'>
