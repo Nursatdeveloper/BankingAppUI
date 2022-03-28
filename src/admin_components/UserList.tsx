@@ -47,10 +47,16 @@ const UserList = () => {
 
     }, [])
 
-    function handleUserClick(userId:number) {
+     async function handleUserClick(userId:number) {
+        setUserId(0)
+        setFname('')
+        setLname('')
+        setGender('')
+        setIIN('')
+        setTelephone('')
         const userAccountsUrl = `${API_URL}/account/get-accounts/${userId}`;
         const token = sessionStorage.getItem('token');
-        fetch(userAccountsUrl, {
+        await fetch(userAccountsUrl, {
             method:"GET",
             headers: {
                 'Accept':'application/json',
@@ -69,27 +75,35 @@ const UserList = () => {
         setTelephone(user[0].phoneNumber)
 
         const photoUrl = `${API_URL}/user/get-user-photo/${userId}`
-        fetch(photoUrl, {
+        var status = 0;
+        await fetch(photoUrl, {
             method:"GET",
             headers:{
               "Authorization":`${token}`
             }
-          }).then(response => response.json())
+          }).then(response => {
+              status = response.status
+              return response.json()
+          })
           .then(result => {
             var base64 = `data:image/png;base64, ${result.photoBytes}`
-            setUserPhotoBase64String(base64)
+            if(status === 404){
+                setUserPhotoBase64String('');
+            } else {
+                setUserPhotoBase64String(base64)
+            }
           })
           .catch(error => console.log(error))
     }
 
-    function blockAccount(accountId:number, isBlocked:boolean){
+    async function blockAccount(accountId:number, isBlocked:boolean){
         const token = sessionStorage.getItem('token');
         var url = `${API_URL}/account/block-account`
 
         if(isBlocked) {
             url = `${API_URL}/account/unblock-account`
         }
-        fetch(url, {
+        await fetch(url, {
             method:"POST",
             headers:{
                 'Content-Type':'application/json',
@@ -183,7 +197,7 @@ const UserList = () => {
         <SelectedUser>
             <div className='left'>
                 <div className='img_wrapper'>
-                    <img src={userPhotoBase64String} />
+                    {userPhotoBase64String === '' ? <img src={require('../images/user.png')} />: <img src={userPhotoBase64String} />}
                 </div>
                 <div className='info'>
                     Имя: {fname}
