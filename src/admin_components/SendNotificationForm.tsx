@@ -1,23 +1,49 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
+import API_URL from '../api_url';
 
 
 const SendNotificationForm = () => {
+    const [notification, setNotification] = useState<string>('');
+    const [notificationReceiver, setNotificationReceiver] = useState<string>('');
+
+    async function sendNotification() {
+        const token = sessionStorage.getItem('token');
+        const url = `${API_URL}/user/send-notification`
+        const SendNotificationCommand = {
+            notificationText : notification,
+            notificationReceiver : notificationReceiver
+        }
+        await fetch(url, {
+            method:"POST",
+            headers:{
+                'Content-Type':'application/json',
+                'Authorization':`${token}`,
+                'Accept':'application/json'
+            },
+            body: JSON.stringify(SendNotificationCommand)
+        }).then(response => response.json())
+        .then(result => alert(result))
+        .catch(error => console.log(error));
+        setNotification('');
+        setNotificationReceiver('');
+    }
+
   return (
     <NotificationFormWrapper>
         <span>Отправить уведомление</span>
         <TextAreaWrapper>
-            <textarea className='notification__text'>
+            <textarea className='notification__text' value={notification} onChange={(e) => setNotification(e.target.value)}>
             </textarea>
         </TextAreaWrapper>
         <div>
-            <select>
+            <select value={notificationReceiver} onChange={(e) => setNotificationReceiver(e.target.value)}>
                 <option>Кому</option>
                 <option>Всем</option>
                 <option>Клиентам</option>
                 <option>Сотрудникам</option>
             </select>
-            <button>
+            <button onClick={sendNotification}>
                 Отправить
             </button>
         </div>

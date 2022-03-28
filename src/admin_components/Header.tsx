@@ -8,7 +8,7 @@ const Header = () => {
     const [userRole, setUserRole] = useState<string>('');
 
     useEffect(() => {
-        setUserCredentials();
+        setTimeout(()=> setUserCredentials(), 200)
         setUserPhoto();
     },[])
 
