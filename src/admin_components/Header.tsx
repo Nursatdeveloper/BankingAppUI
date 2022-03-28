@@ -8,7 +8,8 @@ const Header = () => {
     const [userRole, setUserRole] = useState<string>('');
 
     useEffect(() => {
-        setUserCredentials()
+        setUserCredentials();
+        setUserPhoto();
     },[])
 
     async function setUserCredentials() {

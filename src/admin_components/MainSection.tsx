@@ -1,35 +1,83 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
+import API_URL from '../api_url'
 import CreateEmployeeForm from './CreateEmployeeForm'
 
 const MainSection = () => {
+    const [customerNumber, setCustomerNumber] = useState<number>(0);
+    const [accountNumber, setAccountNumber] = useState<number>(0);
+    const [currentAccountNumber, setCurrentAccountNumber] = useState<number>(0);
+    const [depositAccountNumber, setDepositAccountNumber] = useState<number>(0);
+    const [operationNumber, setOperationNumber] = useState<number>(0);
+    const [moneyInBank, setMoneyInBank] = useState<number>(0);
+    const [femalePercentage, setFemalePercentage] = useState<number>(0);
+    const [malePercentage, setMalePercentage] = useState<number>(0);
+
+    let navigate = useNavigate();
+    const redirect = (url:string) =>{
+        navigate(url);
+    }
 
     useEffect(() => {
-        
+        setGeneralInformation();
     })
+
+    async function setGeneralInformation() {
+        const token = sessionStorage.getItem('token');
+        const url = `${API_URL}/user/get-general-information`
+        await fetch(url, {
+            method:"GET",
+            headers:{
+                'Accept':'application/json',
+                'Authorization':`${token}`
+            }
+        }).then(response => {
+            if (response.status === 401) {
+                alert('В целях безопасности перезайдите заново!')
+                redirect('/login')
+            }
+            return response.json()
+        })
+        .then(result => {
+            setCustomerNumber(result[0]);
+            setAccountNumber(result[1]);
+            setCurrentAccountNumber(result[2]);
+            setDepositAccountNumber(result[3]);
+            setOperationNumber(result[4]);
+            setMoneyInBank(result[5]);
+            const male = result[6]
+            const female = result[7]
+            const total = male+female;
+            const malePercentage = male*100/total;
+            const femalePercentage = female*100/total;
+            setFemalePercentage(femalePercentage);
+            setMalePercentage(malePercentage);
+        })
+    }
 
   return (
     <MainSectionWrapper>
         <GeneralInfo>
             <Information>
                 <div className='center'>Количество клиентов:</div>
-                <div className='number'>1000</div>
+                <div className='number'>{customerNumber}</div>
             </Information>
             <Information>
                 <div className='center'>Количество счетов:</div>
-                <div className='number'>1000</div>
+                <div className='number'>{accountNumber}</div>
                 <div className='additional_info'>
-                    <span>Текуший счет: 200</span>
-                    <span>Депозит: 230</span>
+                    <span>Текуший счет: {currentAccountNumber}</span>
+                    <span>Депозит: {depositAccountNumber}</span>
                 </div>
             </Information>
             <Information>
                 <div className='center'>Количество операции:</div>
-                <div className='number'>1000</div>
+                <div className='number'>{operationNumber}</div>
             </Information>
             <Information>
                 <div className='center'>Деньги в банке:</div>
-                <div className='number'>100000</div>
+                <div className='number'>{moneyInBank}</div>
                 <div className='additional_info'>Включая депозит и текущий счет</div>
             </Information>
         </GeneralInfo>
@@ -39,13 +87,13 @@ const MainSection = () => {
             <div className='gender__proportion'>
                 <span>Мужчины</span>
                 <div className='gender__percentage'>
-                    50%
+                    {malePercentage}%
                 </div>
             </div>
             <div className='gender__proportion'>
                 <span>Женщины</span>
                 <div className='gender__percentage'>
-                    45%
+                    {femalePercentage}%
                 </div>
             </div>
         </div>
