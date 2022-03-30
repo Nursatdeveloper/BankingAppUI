@@ -1,10 +1,20 @@
-import React, { useEffect, useState } from 'react'
+import React, { FC, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components'
 import API_URL from '../api_url';
 import Account from '../models/Account'
 
-const CurrentAccountList = () => {
+interface AccountListProps{
+    account:string
+}
+
+const AccountList:FC<AccountListProps> = ({account}) => {
     const [accounts, setAccounts] = useState<Account[]>([]);
+
+    let navigate = useNavigate();
+    const redirect = (url:string) =>{
+        navigate(url);
+    }
 
     useEffect(() => {
         getAccounts();
@@ -19,12 +29,33 @@ const CurrentAccountList = () => {
                 'Accept':'application/json',
                 'Authorization':`${token}`
             }
-        }).then(response => response.json())
-        .then(result => setAccounts(result))
+        }).then(response => {
+            if(response.status == 401) {
+                alert('В целях безопасности перезайдите заново!')
+                redirect('/login')
+            }
+            return response.json()
+        })
+        .then(result => {
+            if(account === 'current'){
+                var currentAccounts:Account[] = result.filter((account:Account) => account.accountType === 'Текущий счет')
+                setAccounts(currentAccounts)
+            } else {
+                var depositAccounts:Account[] = result.filter((account:Account) => account.accountType === 'Депозит')
+                setAccounts(depositAccounts)
+            }
+        })
         .catch(error => console.log(error));
     }
   return (
     <CurrentAccountListWrapper>
+        {account === 'current' ?
+        <div className='table_name'>
+            Текущие счета
+        </div> : 
+        <div className='table_name'>
+            Депозиты
+        </div>}
         <CurrentAccountTable>
             <div className='table__header'>
                 <div className='id'>
@@ -87,7 +118,7 @@ const CurrentAccountList = () => {
   )
 }
 
-export default CurrentAccountList
+export default AccountList
 
 const CurrentAccountListWrapper = styled.div`
     width:92%;
@@ -98,6 +129,11 @@ const CurrentAccountListWrapper = styled.div`
     right:4%;
     background-color:#f2f2f2;
     border-radius:10px;
+    .table_name{
+        text-align:center;
+        margin-top:10px;
+        font-size:18px;
+    }
 `
 
 const CurrentAccountTable = styled.div`
@@ -105,8 +141,8 @@ const CurrentAccountTable = styled.div`
     margin-left:auto;
     margin-right:auto;
     border:1px solid #a6a6a6;
-    margin-top:20px;
-    height:94%;
+    margin-top:10px;
+    height:90%;
     background-color:white;
     .table__header{
         background-color:#e3e3e3;
@@ -116,7 +152,7 @@ const CurrentAccountTable = styled.div`
     }
     .table__body{
         overflow-y:scroll;
-        height:93.5%;
+        height:93%;
     }
     .table__row{
         display:flex;
