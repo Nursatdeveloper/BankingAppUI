@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import CurrentAccountList from '../admin_components/CurrentAccountList'
 import Header from '../admin_components/Header'
 import LeftBar from '../admin_components/LeftBar'
 import MainSection from '../admin_components/MainSection'
@@ -16,6 +17,7 @@ const AdminProfile = () => {
             <Header />
             {currentPage === 'bank' ? <MainSection /> : null}
             {currentPage === 'userList' ? <UserList /> : null}
+            {currentPage === 'current' ? <CurrentAccountList /> : null}
         </MainSectionWrapper>
     </AdminProfileWrapper>
   )
