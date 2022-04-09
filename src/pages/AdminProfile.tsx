@@ -4,6 +4,7 @@ import AccountList from '../admin_components/AccountList'
 import Header from '../admin_components/Header'
 import LeftBar from '../admin_components/LeftBar'
 import MainSection from '../admin_components/MainSection'
+import TransactionList from '../admin_components/TransactionList'
 import UserList from '../admin_components/UserList'
 
 const AdminProfile = () => {
@@ -19,6 +20,7 @@ const AdminProfile = () => {
             {currentPage === 'userList' ? <UserList /> : null}
             {currentPage === 'current' ? <AccountList account={currentPage}/> : null}
             {currentPage === 'deposit' ? <AccountList account={currentPage}/> : null}
+            {currentPage === 'transaction' ? <TransactionList /> : null}
         </MainSectionWrapper>
     </AdminProfileWrapper>
   )

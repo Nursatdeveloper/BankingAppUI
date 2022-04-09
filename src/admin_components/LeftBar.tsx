@@ -25,7 +25,7 @@ const LeftBar:FC<LeftBarProps> = ({setCurrentPage}) => {
             <LeftBarItem onClick={() => setCurrentPage('deposit')}>
                 Депозиты
             </LeftBarItem>
-            <LeftBarItem>
+            <LeftBarItem onClick={() => setCurrentPage('transaction')}>
                 Операции
             </LeftBarItem>
         </LeftBarItemWrapper>
